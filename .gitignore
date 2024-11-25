@@ -20,6 +20,8 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
-
+#virtual environment
+.python-version
 # Data folder
 data/
+
