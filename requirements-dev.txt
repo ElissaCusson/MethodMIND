@@ -1,0 +1,13 @@
+#run pip install -r requirements-dev.txt
+pytest
+pylint
+ipdb
+jupyterlab
+jupyter
+numpy
+pandas
+matplotlib
+seaborn
+scikit-learn
+llama-cpp-python
+huggingface-hub
