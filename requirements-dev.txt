@@ -16,3 +16,7 @@ torch==1.12.0
 transformers==4.46.3
 google-generativeai==0.8.3
 python-dotenv==0.19.0
+<<<<<<< HEAD
+langchain
+=======
+>>>>>>> 7315dc3d94586b5570244e63bde72eb7c097c894
