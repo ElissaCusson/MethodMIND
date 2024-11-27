@@ -47,22 +47,8 @@ TestResults.xml
 .python-version
 # Data folder
 data/
-
+# Environment variables
+.env
 # Local LLM files
 **/*.gguf
 **/*.ggml
-
-
-
-
-
-
-
-
-
-
-
-
-=======
->>>>>>> parent of 10efb16 (Test do not merge)
-
