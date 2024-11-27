@@ -24,4 +24,8 @@ TestResults.xml
 .python-version
 # Data folder
 data/
+# Local LLM
+*.gguf
+*.ggml
+
 
