@@ -1,28 +1,21 @@
 import requests
 import xml.etree.ElementTree as ET
 import pandas as pd
-import os
-from dotenv import load_dotenv
+from orchestraDitector.params import PUBMED_API_KEY, PUBMED_BASE_URL, PUBMED_SEARCH_STRATEGY
 
 
 def get_pubmed_data():
-    # Load environment variables from the .env file
-    load_dotenv()
-
-    # Access the environment variables
-    API_KEY = os.getenv("API_KEY")
-    BASE_URL = os.getenv("BASE_URL")
-    SEARCH_STRATEGY = os.getenv("SEARCH_STRATEGY")
+    '''This function call the pubmed api and return the abtracts and its metadata in a dataframe'''
 
     # Step 1: Search for articles using ESearch
     search_params = {
         "db": "pubmed",
-        "term": SEARCH_STRATEGY,
+        "term": PUBMED_SEARCH_STRATEGY,
         "retmax": 10,  # Number of results to retrieve
         "retmode": "json",
-        "api_key": API_KEY
+        "api_key": PUBMED_API_KEY
     }
-    esearch_url = f"{BASE_URL}esearch.fcgi"
+    esearch_url = f"{PUBMED_BASE_URL}esearch.fcgi"
     search_response = requests.get(esearch_url, params=search_params)
 
     # Parse the article IDs
@@ -34,9 +27,9 @@ def get_pubmed_data():
         "db": "pubmed",
         "id": ",".join(article_ids),
         "retmode": "xml",
-        "api_key": API_KEY
+        "api_key": PUBMED_API_KEY
     }
-    efetch_url = f"{BASE_URL}efetch.fcgi"
+    efetch_url = f"{PUBMED_BASE_URL}efetch.fcgi"
     fetch_response = requests.get(efetch_url, params=efetch_params)
 
     # Parse the XML response
@@ -84,3 +77,5 @@ def get_pubmed_data():
     df = pd.DataFrame(data)
 
     return df
+
+print(get_pubmed_data())
