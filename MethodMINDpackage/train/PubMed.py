@@ -1,7 +1,7 @@
 import requests
 import xml.etree.ElementTree as ET
 import pandas as pd
-from orchestraDitector.params import PUBMED_API_KEY, PUBMED_BASE_URL, PUBMED_SEARCH_STRATEGY
+from MethodMINDpackage.params import PUBMED_API_KEY, PUBMED_BASE_URL, PUBMED_SEARCH_STRATEGY
 
 
 def get_pubmed_data():
