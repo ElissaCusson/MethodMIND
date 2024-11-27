@@ -7,9 +7,15 @@ def home_page():
 
     #displaying logo at the center
 
+    #absolute path from my computer, may not work on other computers!!!!!
     abs_path = "/home/jplanaslee/code/jplanaslee2/MethodMIND/logo.png"
-    image = Image.open(abs_path)
-    st.columns(3)[1].image(image)
+    try:
+        # Try to open the image
+        image = Image.open(abs_path)
+        st.columns(3)[1].image(image)
+    except Exception as e:
+        # If file not found, display a placeholder message
+        st.columns(3)[1].write('Image not found or cannot be opened.')
 
     #displaying title at the center
     st.markdown("<h1 style='text-align: center;'>Welcome to MethodMIND</h1>", unsafe_allow_html=True)
