@@ -24,4 +24,5 @@ TestResults.xml
 .python-version
 # Data folder
 data/
-
+# Environment variables
+.env
