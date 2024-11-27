@@ -1,3 +1,26 @@
+# OS generated files #
+######################
+.DS_Store
+__MACOSX
+
+# Jupiter Notebook #
+.pytest_cache
+__pycache__
+*checkpoint.ipynb
+*.ipynb_checkpoints
+
+# inteliJ #
+.idea
+*.gz
+*PKG-INFO
+*.egg-info
+*.csv
+*.zip
+*.sqlite
+
+# IDE #
+*.vscode
+
 ### AL ###
 #Template for AL projects for Dynamics 365 Business Central
 #launch.json folder
@@ -26,3 +49,6 @@ TestResults.xml
 data/
 # Environment variables
 .env
+# Local LLM files
+**/*.gguf
+**/*.ggml
