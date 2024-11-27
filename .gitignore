@@ -52,7 +52,6 @@ data/
 # Local LLM files
 **/*.gguf
 **/*.ggml
-
 #Package info (get's created when installing package)
 MethodMIND.egg-info/
 __pycache__/
