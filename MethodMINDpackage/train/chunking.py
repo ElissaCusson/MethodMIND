@@ -4,6 +4,10 @@ from langchain.schema import Document
 
 def chunking(df=get_pubmed_data(), chunk_size=100, chunk_overlap=20):
     """Splits the abstracts into chunks. The function will return a list of chunks inside a list of abstracts."""
+
+    # Filter out rows where Abstract is None
+    df = df[df['Abstract'].notna()]
+
     abstracts_list = df['Abstract'].to_list()
     abstracts_chunks = []
 
@@ -14,13 +18,15 @@ def chunking(df=get_pubmed_data(), chunk_size=100, chunk_overlap=20):
         doi = df.iloc[i]['DOI']
         keywords = df.iloc[i]['Keywords']
         publication_date = df.iloc[i]['Publication Date']
+        full_text_link = df.iloc[i]['Full Text Link']
 
         # Create metadata dictionary
         metadata = {
             'Title': title,
             'DOI': doi,
             'Keywords': keywords,
-            'Publication Date': publication_date
+            'Publication Date': publication_date,
+            'Full Text Link': full_text_link
         }
 
         # Wrap the abstract in a Document object with the metadata
