@@ -1,5 +1,10 @@
 import streamlit as st
 from PIL import Image
+from MethodMINDpackage.orchestraDitector.LLM import llm_test
+from MethodMINDpackage.train.PubMed import get_pubmed_data
+from MethodMINDpackage.deployment.firewall import firewall
+
+
 st.set_page_config(layout="wide")
 
 def home_page():
@@ -7,9 +12,15 @@ def home_page():
 
     #displaying logo at the center
 
-    abs_path = "/home/jplanaslee/code/jplanaslee2/MethodMIND/logo.png"
-    image = Image.open(abs_path)
-    st.columns(3)[1].image(image)
+    #absolute path from my computer, may not work on other computers!!!!!
+    image_path = "MethodMINDpackage/deployment/images/logo.png"
+    try:
+        # Try to open the image
+        image = Image.open(image_path)
+        st.columns(3)[1].image(image)
+    except Exception as e:
+        # If file not found, display a placeholder message
+        st.columns(3)[1].write('Image not found or cannot be opened.')
 
     #displaying title at the center
     st.markdown("<h1 style='text-align: center;'>Welcome to MethodMIND</h1>", unsafe_allow_html=True)
@@ -38,9 +49,9 @@ def home_page():
 
     #explaining how it works
     expander = st.expander("How it works:")
-    expander.write('''
-        explaining how it works
-    ''')
+    expander.write("""
+        it's magic!
+    """)
 
     #frequently asked questions
     st.subheader('Example questions:')
@@ -72,11 +83,18 @@ def home_page():
     #space
     st.write('###')
 
+    with st.spinner('Loading... Please wait'):
+        #getting PubMed keywords
+        df = get_pubmed_data()
+
     #request
     text_input = st.text_area('Type your request here:')
 
     #loading spinner
     if st.button('Submit'):
+
+        stopped_by_firewall = False
+        done_processing = False
         with st.spinner('Processing... Please wait'):
 
             #loading progress
@@ -84,10 +102,37 @@ def home_page():
                 bar = st.progress(0)
 
                 #here we do the task
-                task(text_input)
-                #task 2 : bar.progress(50), etc.
+                is_valid = firewall(text_input, df)
+                if is_valid:
+                    # with st.empty():
+                    #     st.write('running LLM...')
+                    bar.progress(25)
+                    output = llm_test(text_input)
+                        #task 2 : bar.progress(50), etc.
+                    done_processing = True
+                else:
+                    #in case there are other types of errors
+                    stopped_by_firewall = True
+
 
                 bar.progress(100)
+
+        #displaying output
+        if done_processing:
+            st.markdown(f"""<div style="border: 2px solid #4CAF50; padding: 10px; border-radius: 5px;">{output}</div>""", unsafe_allow_html=True)
+
+            abstracts = '''insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts
+            insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts
+            insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts '''
+            st.write('###')
+
+            #displaying abstracts
+            st.markdown('### Abstracts:')
+            st.markdown(f"""<div style="border: 2px solid white; padding: 10px; border-radius: 5px;">{abstracts}</div>""", unsafe_allow_html=True)
+
+        #if request is outside of scope
+        elif stopped_by_firewall:
+            st.write('The request is outside of the scope of the model. Please try again with another request.')
 
     #disclaimer
     #st.caption('MethodMIND can make mistakes. Please check important information')
@@ -97,18 +142,6 @@ def home_page():
         </p>
     """, unsafe_allow_html=True)
 
-
-
-
-def help_page():
-    #help page
-
-    st.title('Help')
-    st.write('##')
-
-    help_input = st.text_area('What can I help you with?')
-    if st.button('Submit'):
-        st.write("We haven't implemented this part yet")
 
 def disclaimer_page():
     #disclaimer page
@@ -133,9 +166,6 @@ def about_page():
         insert credits
     ''')
 
-def task(input):
-    pass
-
 
 #navigation sidebar (left column)
 st.sidebar.title("Navigation")
@@ -143,8 +173,6 @@ page = st.sidebar.radio("Select a page", ["Home", "Help", "Disclaimer", "About"]
 
 if page == "Home":
     home_page()
-elif page == "Help":
-    help_page()
 elif page == "Disclaimer":
     disclaimer_page()
 elif page == "About":
