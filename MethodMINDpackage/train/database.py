@@ -1,8 +1,7 @@
-from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Collection, utility
-from pymilvus import MilvusClient # Import MilvusClient from pymilvus
+from pymilvus import FieldSchema, CollectionSchema, DataType, MilvusClient
 from MethodMINDpackage.params import *
 
-def create_milvus():
+def create_milvus(database_name="MethodMIND"):
 
     # Check if the directory exists; if not, create it
     if not os.path.exists(DATA_DIRECTORY):
@@ -11,9 +10,31 @@ def create_milvus():
     else:
         print(f"Directory {DATA_DIRECTORY} already exists.")
         # Initialize the Milvus client
-    client = MilvusClient(uri=f"{DATA_DIRECTORY}/MethodMIND.db")
+
+    # Define the database file path
+    db_path = f"{DATA_DIRECTORY}/{database_name}.db"
+
+    # Check if the database file exists
+    if not os.path.exists(db_path):
+        print("Database does not exist. Creating new database...")
+        client = MilvusClient(uri=db_path)  # Initialize Milvus client
+    else:
+        print("Database already exists. Skipping creation.")
+        return
 
     # Define schema
+    schema=define_schema()
+
+    # Create collection
+    collection_name=create_collection(schema, client, "MethodVectors")
+
+    # Creating the index
+    create_index(client, collection_name="MethodVectors")
+
+
+    return client
+
+def define_schema():
     fields = [
         FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True),
         FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=768),
@@ -23,21 +44,22 @@ def create_milvus():
         FieldSchema(name="publication_date", dtype=DataType.VARCHAR, max_length=512)
     ]
     schema = CollectionSchema(fields=fields, auto_id=True)
+    return schema
 
-    # Create collection
-    collection_name = "MethodVectors"
-
-    client.drop_collection(collection_name=collection_name)
-
+def create_collection(schema, client, collection_name="MethodVectors"):
     if collection_name in client.list_collections():
         print(f"Collection {collection_name} already exists...")
-
-    client.create_collection(collection_name=collection_name, schema=schema)
+        return
+    else:
+        client.create_collection(collection_name=collection_name, schema=schema)
 
     print(f"Collection {collection_name} created successfully.")
 
-    # Creting the index
-    # Set up the index parameters
+    return collection_name
+
+def create_index(client,collection_name="MethodVectors"):
+
+# Set up the index parameters
     index_params = client.prepare_index_params()
 
     # Add an index on the vector field.
@@ -57,15 +79,16 @@ def create_milvus():
         )
 
     # print("Index vector created successfully.")
+    return
+
+def disconnect(client, collection_name="MethodVectors"):
 
     client.flush(collection_name) # Pass collection_name directly as a string
     client.close()
-    # print("Milvus client connection closed.")
-
+    print("Milvus client connection closed.")
     return
-
-
 
 #TEST
 # Call the function
-create_milvus()
+client=create_milvus("MethodMIND")
+disconnect(client, collection_name="MethodVectors")
