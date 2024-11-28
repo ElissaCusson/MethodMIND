@@ -8,3 +8,5 @@ def llm_test():
     model = genai.GenerativeModel(model_name="gemini-1.5-flash")
     response = model.generate_content("Explain how AI works")
     return response.text
+
+print(llm_test())
