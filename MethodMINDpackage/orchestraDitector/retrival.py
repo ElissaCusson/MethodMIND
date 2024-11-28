@@ -4,7 +4,9 @@ from langchain.schema import Document
 from transformers import AutoModel, AutoTokenizer
 import google.generativeai as genai
 import torch
-from MethodMINDpackage.params import GEMINI_API_KEY
+from MethodMINDpackage.params import GEMINI_API_KEY, DATABASE_PATH
+from langchain_milvus import Milvus
+
 
 def user_input_enhancing(user_input):
     """
@@ -71,11 +73,25 @@ def user_input_enhancing(user_input):
 
 # Test
 user_query = "Which methods can I use to measure tremor decrease and gait improvement in Parkinson patients receiving deep brain stimulation?"
-embeddings = user_input_enhancing(user_query)
+embedded_query = user_input_enhancing(user_query)
 
-if isinstance(embeddings, str):
+if isinstance(embedded_query, str):
     # Handle error message
-    print(embeddings)
+    print(embedded_query)
 else:
     # Process embeddings
-    print(f"Generated {len(embeddings)} embeddings.")
+    print(f"Generated {len(embedded_query)} embeddings.")
+
+
+def search_similarity(query, k=3):
+    vectorstore = Milvus(
+        connection_args={
+            "uri": DATABASE_PATH,  # Path to the Milvus database (or connection details)
+        }
+    )
+    results = vectorstore.similarity_search(query, k=k)
+    return results
+
+# Display the most similar document
+similarity = search_similarity(embedded_query)
+print("Most similar document:", similarity[0]['text'])

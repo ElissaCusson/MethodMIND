@@ -2,38 +2,6 @@ import os
 from pymilvus import FieldSchema, CollectionSchema, DataType, MilvusClient, connections
 from MethodMINDpackage.params import *
 
-def create_milvus(database_name="MethodMIND"):
-
-    # Check if the directory exists; if not, create it
-    if not os.path.exists(DATA_DIRECTORY):
-        os.makedirs(DATA_DIRECTORY)
-        print(f"Directory {DATA_DIRECTORY} created.")
-    else:
-        print(f"Directory {DATA_DIRECTORY} already exists.")
-        # Initialize the Milvus client
-
-    # Define the database file path
-    db_path = f"{DATA_DIRECTORY}/{database_name}.db"
-
-    # Check if the database file exists
-    if not os.path.exists(db_path):
-        print("Database does not exist. Creating new database...")
-        client = MilvusClient(uri=db_path)  # Initialize Milvus client
-    else:
-        print("Database already exists. Skipping creation.")
-        return
-
-    # Define schema
-    schema=define_schema()
-
-    # Create collection
-    collection_name=create_collection(schema, client, "MethodVectors")
-
-    # Creating the index
-    create_index(client, collection_name)
-
-    return client
-
 def define_schema():
     fields = [
         FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True),
@@ -89,24 +57,65 @@ def disconnect(client, collection_name="MethodVectors"):
     print("Milvus client connection closed.")
     return
 
+def checkcollection(client,collection_name="MethodVectors"):
+    if collection_name not in client.list_collections():
+        print(f"Collection {collection_name} does not exist")
+    else:
+        print(f"Collection {collection_name} exists")
+
+    client.flush(collection_name)
+    return collection_name
+
+def create_milvus(database_name="MethodMIND"):
+
+    # Check if the directory exists; if not, create it
+    if not os.path.exists(DATA_DIRECTORY):
+        os.makedirs(DATA_DIRECTORY)
+        print(f"Directory {DATA_DIRECTORY} created.")
+    else:
+        print(f"Directory {DATA_DIRECTORY} already exists.")
+        # Initialize the Milvus client
+
+    # Define the database file path
+    db_path = f"{DATA_DIRECTORY}/{database_name}.db"
+
+    # Check if the database file exists
+    if not os.path.exists(db_path):
+        print("Database does not exist. Creating new database...")
+        client = MilvusClient(uri=db_path)  # Initialize Milvus client
+    else:
+        print("Database already exists. Skipping creation.")
+        return
+
+    # Define schema
+    schema=define_schema()
+
+    # Create collection
+    collection_name=create_collection(schema, client, "MethodVectors")
+
+    # Creating the index
+    create_index(client, collection_name="MethodVectors")
+
+
+    return client
+
+def connectload(database_name="MethodMIND", collection_name="MethodVectors"):
+    client=connectDB("MethodMIND")
+    checkcollection(client,collection_name)
+    return client,collection_name
+
+def connectDB(database_name="MethodMIND"):
+    db_path = f"{DATA_DIRECTORY}/{database_name}.db"
+
+    # Check if the database file exists
+    if not os.path.exists(db_path):
+        print("Database does not exist")
+        return
+    else:
+        client = MilvusClient(uri=db_path)
+    return client
+
 #TEST
 # Call the function
 client=create_milvus("MethodMIND")
 #disconnect(client, collection_name="MethodVectors")
-
-
-def insert_data_milvus(embeddings_data, collection_name, client):
-
-    # In pymilvus 2.5.0, you load the collection using the client directl
-    #collection = client.load_collection(collection_name)  # Load the collection
-
-    client.insert(collection_name=collection_name,
-    data=embeddings_data)
-
-    # Check if data is successfully inserted.
-    #row_count = client.get_collection_stats(collection_name=collection_name)['row_count']
-    #print(f"\n {database_name} database as {row_count} in collection {collection_name}")
-
-    #client.flush(collection_name) # Pass collection_name directly as a string
-    #client.close()
-    #print("Milvus client connection closed.")

@@ -1,12 +1,10 @@
 import google.generativeai as genai
-import os
+from MethodMINDpackage.params import *
 # from dotenv import load_dotenv
 
-def llm_test():
-    genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+def llm_test(text):
+    genai.configure(api_key=GEMINI_API_KEY)
 
     model = genai.GenerativeModel(model_name="gemini-1.5-flash")
-    response = model.generate_content("Explain how AI works")
+    response = model.generate_content(text)
     return response.text
-
-print(llm_test())
