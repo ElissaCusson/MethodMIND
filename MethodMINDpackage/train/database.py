@@ -1,4 +1,5 @@
-from pymilvus import FieldSchema, CollectionSchema, DataType, MilvusClient
+import os
+from pymilvus import FieldSchema, CollectionSchema, DataType, MilvusClient, connections
 from MethodMINDpackage.params import *
 
 def create_milvus(database_name="MethodMIND"):
@@ -29,8 +30,7 @@ def create_milvus(database_name="MethodMIND"):
     collection_name=create_collection(schema, client, "MethodVectors")
 
     # Creating the index
-    create_index(client, collection_name="MethodVectors")
-
+    create_index(client, collection_name)
 
     return client
 
@@ -41,6 +41,7 @@ def define_schema():
         FieldSchema(name="title", dtype=DataType.VARCHAR, max_length=512),
         FieldSchema(name="doi", dtype=DataType.VARCHAR, max_length=512),
         FieldSchema(name="keywords", dtype=DataType.VARCHAR, max_length=512),
+        FieldSchema(name="full_text_link", dtype=DataType.VARCHAR, max_length=512),
         FieldSchema(name="publication_date", dtype=DataType.VARCHAR, max_length=512)
     ]
     schema = CollectionSchema(fields=fields, auto_id=True)
@@ -90,5 +91,22 @@ def disconnect(client, collection_name="MethodVectors"):
 
 #TEST
 # Call the function
-#client=create_milvus("MethodMIND")
+client=create_milvus("MethodMIND")
 #disconnect(client, collection_name="MethodVectors")
+
+
+def insert_data_milvus(embeddings_data, collection_name, client):
+
+    # In pymilvus 2.5.0, you load the collection using the client directl
+    #collection = client.load_collection(collection_name)  # Load the collection
+
+    client.insert(collection_name=collection_name,
+    data=embeddings_data)
+
+    # Check if data is successfully inserted.
+    #row_count = client.get_collection_stats(collection_name=collection_name)['row_count']
+    #print(f"\n {database_name} database as {row_count} in collection {collection_name}")
+
+    #client.flush(collection_name) # Pass collection_name directly as a string
+    #client.close()
+    #print("Milvus client connection closed.")

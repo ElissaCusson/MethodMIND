@@ -9,5 +9,4 @@ PUBMED_SEARCH_STRATEGY = os.environ.get("PUBMED_SEARCH_STRATEGY")
 DIRENV_DIR = os.environ.get("DIRENV_DIR")
 DATA_DIRECTORY = f"{DIRENV_DIR[1:]}/data" #the slice is for removing the first dash
 
-GEMINI_API_kEY = os.environ.get("GEMINI_API_kEY")
-
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
