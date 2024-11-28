@@ -142,7 +142,6 @@ def home_page():
         </p>
     """, unsafe_allow_html=True)
 
-
 def disclaimer_page():
     #disclaimer page
 
@@ -169,7 +168,7 @@ def about_page():
 
 #navigation sidebar (left column)
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Select a page", ["Home", "Help", "Disclaimer", "About"])
+page = st.sidebar.radio("Select a page", ["Home", "Disclaimer", "About"])
 
 if page == "Home":
     home_page()
