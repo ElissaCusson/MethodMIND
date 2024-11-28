@@ -55,3 +55,4 @@ data/
 #Package info (get's created when installing package)
 MethodMIND.egg-info/
 __pycache__/
+MethodMINDpackage/__pycache__/
