@@ -15,5 +15,7 @@ torch
 transformers
 google-generativeai
 python-dotenv
-langchain==0.0.186
 streamlit
+transformers
+pymilvus
+langchain-community
