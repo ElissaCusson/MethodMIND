@@ -90,5 +90,5 @@ def disconnect(client, collection_name="MethodVectors"):
 
 #TEST
 # Call the function
-client=create_milvus("MethodMIND")
-disconnect(client, collection_name="MethodVectors")
+#client=create_milvus("MethodMIND")
+#disconnect(client, collection_name="MethodVectors")
