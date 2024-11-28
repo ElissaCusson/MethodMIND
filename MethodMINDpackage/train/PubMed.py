@@ -5,7 +5,7 @@ from MethodMINDpackage.params import PUBMED_API_KEY, PUBMED_BASE_URL, PUBMED_SEA
 
 
 def get_pubmed_data():
-    '''This function call the pubmed api and return the abtracts and its metadata in a dataframe'''
+    '''This function calls the PubMed API and returns abstracts, metadata, and full-text links in a DataFrame'''
 
     # Step 1: Search for articles using ESearch
     search_params = {
@@ -38,14 +38,18 @@ def get_pubmed_data():
     # Prepare a list to store extracted data
     data = []
 
-    # Extract Title, Abstract, DOI, Keywords, and Publication Date
+    # Extract Title, Abstract, DOI, Keywords, Publication Date, and Full-Text Link
     for article in root.findall(".//PubmedArticle"):
         title = article.find(".//ArticleTitle").text
         abstract = article.find(".//AbstractText")
         doi = None
+        full_text_link = None
+
+        # Extract DOI and Full-Text Link
         for id_elem in article.findall(".//ArticleId"):
             if id_elem.get("IdType") == "doi":
                 doi = id_elem.text
+                full_text_link = f"https://doi.org/{doi}"  # Construct full-text link from DOI
 
         # Extract keywords
         keywords = [kw.text for kw in article.findall(".//Keyword") if kw.text is not None]
@@ -64,18 +68,22 @@ def get_pubmed_data():
         else:
             pub_date = None
 
-        # Append the extracted data to the list
-        data.append({
-            "Title": title,
-            "Abstract": abstract.text if abstract is not None else None,
-            "DOI": doi,
-            "Keywords": ", ".join(keywords) if keywords else None,
-            "Publication Date": pub_date
-        })
+        # Only add articles with a non-null Abstract
+        if abstract is not None:
+            data.append({
+                "Title": title if title is not None else "NR",
+                "Abstract": abstract.text,
+                "DOI": doi if doi is not None else "NR",
+                "Full Text Link": full_text_link if full_text_link is not None else "NR",
+                "Keywords": ", ".join(keywords) if keywords else "NR",
+                "Publication Date": pub_date if pub_date is not None else "NR"
+            })
 
     # Create a DataFrame from the collected data
     df = pd.DataFrame(data)
 
     return df
 
+
+# Test the function
 print(get_pubmed_data())
