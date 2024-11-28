@@ -27,7 +27,7 @@ def embed_text(text):
 
 # connect to Milvus
 database_name="MethodMIND"
-client = MilvusClient(uri=f"./{database_name}.db")  # Initialize MilvusClient
+client = MilvusClient(uri=DATABASE_PATH)  # Initialize MilvusClient
 collection_name = "MethodVectors"
 
 # test connect to collection
@@ -52,7 +52,7 @@ def store_chunk_embeddings(client, collection_name):
             text = chunk.page_content
             metadata = chunk.metadata
 
-            # Embed the text using the reusable embed_text function
+            # Embed the text
             embedding = embed_text(text)
 
             # Store the embedding and metadata
@@ -65,9 +65,20 @@ def store_chunk_embeddings(client, collection_name):
                 "full_text_link": metadata['Full Text Link']
             })
 
-            # Store embeddings and metadata in Milvus
-            #insert_data_milvus(group_embeddings, collection_name, client)
-            client.insert(collection_name=collection_name, data=group_embeddings)
+        # Convert group_embeddings into a dictionary of lists for Milvus insertion
+        insert_data = {
+            "embedding": [item["embedding"] for item in group_embeddings],
+            "title": [item["title"] for item in group_embeddings],
+            "doi": [item["doi"] for item in group_embeddings],
+            "keywords": [item["keywords"] for item in group_embeddings],
+            "publication_date": [item["publication_date"] for item in group_embeddings],
+            "full_text_link": [item["full_text_link"] for item in group_embeddings],
+        }
+
+        # Insert into Milvus
+        client.insert(collection_name=collection_name, data=insert_data)
+
+        print(f"Inserted {len(group_embeddings)} embeddings into collection {collection_name}.")
 
         # Append the group of embeddings with metadata
         embedded_chunks_with_metadata.append(group_embeddings)
