@@ -2,9 +2,10 @@ from PubMed import get_pubmed_data
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 
-def chunking(df=get_pubmed_data(), chunk_size=100, chunk_overlap=20):
+def chunking(df = None, chunk_size=100, chunk_overlap=20):
     """Splits the abstracts into chunks. The function will return a list of chunks inside a list of abstracts."""
-
+    if df is None:
+        df = get_pubmed_data()
     # Filter out rows where Abstract is None
     df = df[df['Abstract'].notna()]
 
