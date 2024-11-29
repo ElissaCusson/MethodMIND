@@ -66,14 +66,14 @@ def store_chunk_embeddings(client, collection_name):
             })
 
         # Convert group_embeddings into a dictionary of lists for Milvus insertion
-        insert_data = {
+        insert_data = [{
             "embedding": [item["embedding"] for item in group_embeddings],
             "title": [item["title"] for item in group_embeddings],
             "doi": [item["doi"] for item in group_embeddings],
             "keywords": [item["keywords"] for item in group_embeddings],
             "publication_date": [item["publication_date"] for item in group_embeddings],
             "full_text_link": [item["full_text_link"] for item in group_embeddings],
-        }
+        }]
 
         # Insert into Milvus
         client.insert(collection_name=collection_name, data=insert_data)
