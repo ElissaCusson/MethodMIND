@@ -118,4 +118,4 @@ def connectDB(database_name="MethodMIND"):
 #TEST
 # Call the function
 client=create_milvus("MethodMIND")
-disconnect(client, collection_name="MethodVectors")
+
