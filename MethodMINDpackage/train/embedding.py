@@ -46,37 +46,26 @@ def store_chunk_embeddings(client, collection_name):
 
     # Iterate over the chunks and their metadata
     for chunk_group in abstracts_chunked:
-        group_embeddings = []
         for chunk in chunk_group:
             # Extract text and metadata
             text = chunk.page_content
             metadata = chunk.metadata
 
             # Embed the text
-            embedding = embed_text(text)
+            embedding = embed_text(text).squeeze(0).tolist()
 
             # Store the embedding and metadata
-            group_embeddings.append({
+            group_embeddings = {
                 "embedding": embedding,
                 "title": metadata['Title'],
                 "doi": metadata['DOI'],
                 "keywords": metadata['Keywords'],
                 "publication_date": metadata['Publication Date'],
                 "full_text_link": metadata['Full Text Link']
-            })
+            }
 
-        # Convert group_embeddings into a dictionary of lists for Milvus insertion
-        insert_data = [{
-            "embedding": [item["embedding"] for item in group_embeddings],
-            "title": [item["title"] for item in group_embeddings],
-            "doi": [item["doi"] for item in group_embeddings],
-            "keywords": [item["keywords"] for item in group_embeddings],
-            "publication_date": [item["publication_date"] for item in group_embeddings],
-            "full_text_link": [item["full_text_link"] for item in group_embeddings],
-        }]
-
-        # Insert into Milvus
-        client.insert(collection_name=collection_name, data=insert_data)
+            # Insert into Milvus
+            client.insert(collection_name=collection_name, data=[group_embeddings])
 
         print(f"Inserted {len(group_embeddings)} embeddings into collection {collection_name}.")
 
