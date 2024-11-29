@@ -52,7 +52,7 @@ def store_chunk_embeddings(client, collection_name):
             metadata = chunk.metadata
 
             # Embed the text
-            embedding = embed_text(text).squeeze(0).tolist()
+            embedding = embed_text(text).squeeze(0).numpy()
 
             # Store the embedding and metadata
             group_embeddings = {
