@@ -6,5 +6,8 @@ def llm_test(text):
     genai.configure(api_key=GEMINI_API_KEY)
 
     model = genai.GenerativeModel(model_name="gemini-1.5-flash")
-    response = model.generate_content(text)
+
+    prompt = text
+
+    response = model.generate_content(prompt)
     return response.text

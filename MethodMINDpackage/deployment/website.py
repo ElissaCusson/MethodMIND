@@ -3,9 +3,12 @@ from PIL import Image
 from MethodMINDpackage.orchestraDitector.LLM import llm_test
 from MethodMINDpackage.train.PubMed import get_pubmed_data
 from MethodMINDpackage.deployment.firewall import firewall
+#from MethodMINDpackage.orchestraDitector import retrival           ###
 
 
 st.set_page_config(layout="wide")
+
+
 
 def home_page():
     #home page
@@ -50,7 +53,7 @@ def home_page():
     #explaining how it works
     expander = st.expander("How it works:")
     expander.write("""
-        it's magic!
+        we'll implement this last
     """)
 
     #frequently asked questions
@@ -83,15 +86,30 @@ def home_page():
     #space
     st.write('###')
 
-    with st.spinner('Loading... Please wait'):
-        #getting PubMed keywords
-        df = get_pubmed_data()
+    # with st.spinner('Loading... Please wait'):
+    #     #getting PubMed keywords
+    #     df = get_pubmed_data()
+
+    # Check if the data is already in session state, if not, fetch the data
+    if 'pubmed_data' not in st.session_state:
+        with st.spinner('Loading... Please wait'):
+            # Fetch PubMed data only once and store it in session state
+            st.session_state.pubmed_data = get_pubmed_data()
+
+    df = st.session_state.pubmed_data
+
+    #number of abstracts
+    slider_values = [1, 3, 5, 10, 15, 20, 30]
+    number_of_abstracts = st.select_slider('Select a number of abstracts to return:', options=slider_values, value=10)
 
     #request
     text_input = st.text_area('Type your request here:')
 
     #loading spinner
     if st.button('Submit'):
+
+        #for llm search
+        full_text_input = f'Based on the following abstracts, {text_input}'
 
         stopped_by_firewall = False
         done_processing = False
@@ -108,6 +126,9 @@ def home_page():
                     #     st.write('running LLM...')
                     bar.progress(25)
 
+                    # #similarity abstracts                                                 ###
+                    #similarity = retrival.search_similarity(text_input, number_of_abstracts)
+
 
 
                     #insert other procedures here
@@ -116,6 +137,10 @@ def home_page():
 
                     #testing llm
                     output = llm_test(text_input)
+
+                    # #full llm                                                             ###
+                    #output = llm_test(full_text_input)
+
                     done_processing = True
                 else:
                     #in case there are other types of errors
@@ -139,7 +164,7 @@ def home_page():
 
         #if request is outside of scope
         elif stopped_by_firewall:
-            st.write('The request is outside of the scope of the model. Please try again with another request.')
+            st.subheader('The request is outside of the scope of the model. Please try again with another request.')
 
     #disclaimer
     #st.caption('MethodMIND can make mistakes. Please check important information')
