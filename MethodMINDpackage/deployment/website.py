@@ -107,8 +107,15 @@ def home_page():
                     # with st.empty():
                     #     st.write('running LLM...')
                     bar.progress(25)
+
+
+
+                    #insert other procedures here
+
+
+
+                    #testing llm
                     output = llm_test(text_input)
-                        #task 2 : bar.progress(50), etc.
                     done_processing = True
                 else:
                     #in case there are other types of errors
@@ -169,7 +176,7 @@ def about_page():
 
 #navigation sidebar (left column)
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Select a page", ["Home", "Help", "Disclaimer", "About"])
+page = st.sidebar.radio("Select a page", ["Home", "Disclaimer", "About"])
 
 if page == "Home":
     home_page()
