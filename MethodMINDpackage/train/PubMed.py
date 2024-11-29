@@ -11,7 +11,7 @@ def get_pubmed_data():
     search_params = {
         "db": "pubmed",
         "term": PUBMED_SEARCH_STRATEGY,
-        "retmax": 10,  # Number of results to retrieve
+        "retmax": 100,  # Number of results to retrieve
         "retmode": "json",
         "api_key": PUBMED_API_KEY
     }
