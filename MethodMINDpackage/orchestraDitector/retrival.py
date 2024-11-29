@@ -131,8 +131,8 @@ def search_similarity(query, k=3):
         expr=None  # You can add filtering expressions here if needed
     )
     disconnect_alias(client_alias)
-    print(type(results[0][0]))
-    return results
+    # print(type(results[0][0].id))
+    return results[0][0].id
 
 # # Display the most similar document
 similarity = search_similarity(user_query, k=1)
@@ -187,7 +187,7 @@ def query_by_id(user_query, query_id=None):
     Returns:
         list: Query results containing matched metadata and vector data.
     """
-    query_id = search_similarity(user_query, k=1)
+    query_id = str(search_similarity(user_query, k=1))
     # Connect and load the collection
     client_alias = connectDB_alias()
     if client_alias is None:
@@ -210,7 +210,8 @@ def query_by_id(user_query, query_id=None):
             output_fields=["title", "doi", "keywords", "full_text_link", "publication_date"]  # Specify fields to retrieve
         )
         print(f"Query completed. Retrieved {len(results)} results.")
-        return results
+        # print(type(results[0]['doi']))
+        return results[0]['doi']
     except Exception as e:
         print(f"An error occurred during query: {e}")
         return None
@@ -221,6 +222,6 @@ def query_by_id(user_query, query_id=None):
 
 
 
-# print(query_by_id(query_id='454267205411931726'))
+# print(query_by_id(user_query, query_id=None))
 
-# print(get_abstract_by_doi('10.1371/journal.pone.0047387'))
+# print(get_abstract_by_doi(user_query))

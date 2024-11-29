@@ -4,6 +4,9 @@ import pandas as pd
 from MethodMINDpackage.params import PUBMED_API_KEY, PUBMED_BASE_URL, PUBMED_SEARCH_STRATEGY
 from MethodMINDpackage.orchestraDitector.retrival import query_by_id
 
+########### MVP TEST
+user_query = "Which methods can I use to measure tremor decrease and gait improvement in Parkinson patients receiving deep brain stimulation?"
+###############
 
 def get_pubmed_data():
     '''This function calls the PubMed API and returns abstracts, metadata, and full-text links in a DataFrame'''
@@ -124,7 +127,8 @@ def get_abstract_by_doi(user_query, doi= None):
         print("No abstract found for the given DOI.")
         return None
 
-
+##############
+print(get_abstract_by_doi(user_query, doi= None))
 # Example usage
 # doi = "10.3390/nu16223863"  # Replace with a valid DOI
 # api_key = "781f1d6e9a1ddd33b37d1ef4facf505a7209"  # Replace with your PubMed API key
