@@ -6,8 +6,10 @@ def chunking(df = None, chunk_size=100, chunk_overlap=20):
     """Splits the abstracts into chunks. The function will return a list of chunks inside a list of abstracts."""
     if df is None:
         df = get_pubmed_data()
-    # Filter out rows where Abstract is None
-    df = df[df['Abstract'].notna()]
+
+    # Filter out rows where Abstract is None or empty
+    df = df[df['Abstract'].notna() & (df['Abstract'].str.strip() != '')]
+
 
     abstracts_list = df['Abstract'].to_list()
     abstracts_chunks = []
@@ -38,6 +40,11 @@ def chunking(df = None, chunk_size=100, chunk_overlap=20):
 
         # Split the document into chunks
         chunks = text_splitter.split_documents([document])
+
+        # Handle short abstracts explicitly
+        if not chunks:
+            print(f"Warning: Abstract '{title}' (DOI: {doi}) is too short to be chunked. Using the full abstract.")
+            chunks = [Document(page_content=abstract, metadata=metadata)]
 
         # Append the chunks to the list
         abstracts_chunks.append(chunks)
