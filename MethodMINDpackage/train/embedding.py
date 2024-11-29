@@ -2,7 +2,8 @@ from transformers import AutoModel, AutoTokenizer
 import torch
 from chunking import chunking
 from PubMed import get_pubmed_data
-
+from pymilvus import MilvusClient
+from MethodMINDpackage.params import *
 
 # Load SciBERT model and tokenizer once globally
 model_name = "allenai/scibert_scivocab_uncased"
@@ -24,7 +25,18 @@ def embed_text(text):
     return embeddings
 
 
-def store_chunk_embeddings():
+# connect to Milvus
+database_name="MethodMIND"
+client = MilvusClient(uri=DATABASE_PATH)  # Initialize MilvusClient
+collection_name = "MethodVectors"
+
+# test connect to collection
+if collection_name in client.list_collections():
+    print(f"Collection {collection_name} already exists...")
+else:
+    print("No collection")
+
+def store_chunk_embeddings(client, collection_name):
     """Store the embeddings for each chunk along with metadata."""
     # Process abstracts_chunked
     abstracts_chunked = chunking(df=get_pubmed_data(), chunk_size=100, chunk_overlap=20)
@@ -40,14 +52,33 @@ def store_chunk_embeddings():
             text = chunk.page_content
             metadata = chunk.metadata
 
-            # Embed the text using the reusable embed_text function
+            # Embed the text
             embedding = embed_text(text)
 
             # Store the embedding and metadata
             group_embeddings.append({
                 "embedding": embedding,
-                "metadata": metadata
+                "title": metadata['Title'],
+                "doi": metadata['DOI'],
+                "keywords": metadata['Keywords'],
+                "publication_date": metadata['Publication Date'],
+                "full_text_link": metadata['Full Text Link']
             })
+
+        # Convert group_embeddings into a dictionary of lists for Milvus insertion
+        insert_data = {
+            "embedding": [item["embedding"] for item in group_embeddings],
+            "title": [item["title"] for item in group_embeddings],
+            "doi": [item["doi"] for item in group_embeddings],
+            "keywords": [item["keywords"] for item in group_embeddings],
+            "publication_date": [item["publication_date"] for item in group_embeddings],
+            "full_text_link": [item["full_text_link"] for item in group_embeddings],
+        }
+
+        # Insert into Milvus
+        client.insert(collection_name=collection_name, data=insert_data)
+
+        print(f"Inserted {len(group_embeddings)} embeddings into collection {collection_name}.")
 
         # Append the group of embeddings with metadata
         embedded_chunks_with_metadata.append(group_embeddings)
@@ -56,6 +87,8 @@ def store_chunk_embeddings():
     return embedded_chunks_with_metadata
 
 
-# test
-embedded_chunks_with_metadata = store_chunk_embeddings()
-print(embedded_chunks_with_metadata)
+# Store embeddings in Milvus
+store_chunk_embeddings(client, collection_name)
+
+row_count = client.get_collection_stats(collection_name=collection_name)['row_count']
+print(f"\n {database_name} database as {row_count} in collection {collection_name}")

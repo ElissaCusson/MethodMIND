@@ -1,4 +1,5 @@
-from pymilvus import FieldSchema, CollectionSchema, DataType, MilvusClient
+import os
+from pymilvus import FieldSchema, CollectionSchema, DataType, MilvusClient, connections
 from MethodMINDpackage.params import *
 
 def define_schema():
@@ -8,6 +9,7 @@ def define_schema():
         FieldSchema(name="title", dtype=DataType.VARCHAR, max_length=512),
         FieldSchema(name="doi", dtype=DataType.VARCHAR, max_length=512),
         FieldSchema(name="keywords", dtype=DataType.VARCHAR, max_length=512),
+        FieldSchema(name="full_text_link", dtype=DataType.VARCHAR, max_length=512),
         FieldSchema(name="publication_date", dtype=DataType.VARCHAR, max_length=512)
     ]
     schema = CollectionSchema(fields=fields, auto_id=True)
@@ -112,3 +114,8 @@ def connectDB(database_name="MethodMIND"):
     else:
         client = MilvusClient(uri=db_path)
     return client
+
+#TEST
+# Call the function
+client=create_milvus("MethodMIND")
+
