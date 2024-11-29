@@ -117,4 +117,4 @@ def connectDB(database_name="MethodMIND"):
 
 #TEST
 # Call the function
-#client=create_milvus("MethodMIND")
+# create_milvus("MethodMIND")
