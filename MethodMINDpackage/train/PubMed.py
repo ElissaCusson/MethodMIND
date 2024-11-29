@@ -84,6 +84,8 @@ def get_pubmed_data():
 
     return df
 
+def get_abstract_text(DOI):
+    pass #your code here
 
 # Test the function
 print(get_pubmed_data())
