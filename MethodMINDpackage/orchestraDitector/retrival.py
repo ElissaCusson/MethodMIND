@@ -4,11 +4,11 @@ from langchain.schema import Document
 from transformers import AutoModel, AutoTokenizer
 import google.generativeai as genai
 import torch
-from MethodMINDpackage.params import GEMINI_API_KEY, DATABASE_PATH
+from MethodMINDpackage.params import GEMINI_API_KEY, PUBMED_API_KEY
 from langchain_milvus import Milvus
 from pymilvus import Collection
 from MethodMINDpackage.train.database import connectDB_alias, disconnect_alias, connectload, disconnect_client
-
+# from MethodMINDpackage.train.PubMed import get_abstract_by_doi
 
 
 def user_input_enhancing(user_input):
@@ -131,11 +131,12 @@ def search_similarity(query, k=3):
         expr=None  # You can add filtering expressions here if needed
     )
     disconnect_alias(client_alias)
+    print(type(results[0][0]))
     return results
 
 # # Display the most similar document
-similarity = search_similarity(user_query, k=10)
-print("Most similar documents:", similarity)
+similarity = search_similarity(user_query, k=1)
+# print("Most similar documents:", similarity)
 
 def query_by_id_client(query_id=None):
     """
@@ -176,7 +177,7 @@ def query_by_id_client(query_id=None):
 
 from pymilvus import Collection
 
-def query_by_id(query_id=None):
+def query_by_id(user_query, query_id=None):
     """
     Retrieve metadata and vector data for a specific ID from the collection.
 
@@ -186,6 +187,7 @@ def query_by_id(query_id=None):
     Returns:
         list: Query results containing matched metadata and vector data.
     """
+    query_id = search_similarity(user_query, k=1)
     # Connect and load the collection
     client_alias = connectDB_alias()
     if client_alias is None:
@@ -219,4 +221,6 @@ def query_by_id(query_id=None):
 
 
 
-print(query_by_id(query_id='454267205411931726'))
+# print(query_by_id(query_id='454267205411931726'))
+
+# print(get_abstract_by_doi('10.1371/journal.pone.0047387'))
