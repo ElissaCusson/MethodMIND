@@ -4,6 +4,8 @@ from MethodMINDpackage.orchestraDitector.LLM import llm_test
 from MethodMINDpackage.train.PubMed import get_pubmed_data
 from MethodMINDpackage.deployment.firewall import firewall
 #from MethodMINDpackage.orchestraDitector import retrival           ###
+#from MethodMINDpackage.train.PubMed import get_abstract_by_doi         ###
+
 
 
 st.set_page_config(layout="wide")
@@ -108,8 +110,11 @@ def home_page():
     #loading spinner
     if st.button('Submit'):
 
+        # #hard coded
+        #abstract_by_doi = get_abstract_by_doi(text_input, doi= '10.1111/ejn.16521')                                 #####
+
         #for llm search
-        full_text_input = f'Based on the following abstracts, {text_input}'
+        #full_text_input = f'Based on the most relevant abstracts retrieved, {text_input} /n/n Abstracts: /n {abstract_by_doi}'      ###
 
         stopped_by_firewall = False
         done_processing = False
