@@ -4,7 +4,7 @@ from MethodMINDpackage.orchestraDitector.LLM import llm_test
 from MethodMINDpackage.train.PubMed import get_pubmed_data
 from MethodMINDpackage.deployment.firewall import firewall
 #from MethodMINDpackage.orchestraDitector import retrival           ###
-#from MethodMINDpackage.train.PubMed import get_abstract_by_doi         ###
+from MethodMINDpackage.train.PubMed import get_abstract_by_doi         ###
 
 
 
@@ -111,10 +111,12 @@ def home_page():
     if st.button('Submit'):
 
         # #hard coded
-        #abstract_by_doi = get_abstract_by_doi(text_input, doi= '10.1111/ejn.16521')                                 #####
+        abstract_by_doi = get_abstract_by_doi(text_input, doi= None)                                 #####
+
+        st.write(f"Abstract found: {abstract_by_doi}")
 
         #for llm search
-        #full_text_input = f'Based on the most relevant abstracts retrieved, {text_input} /n/n Abstracts: /n {abstract_by_doi}'      ###
+        full_text_input = f'Based on the most relevant abstracts retrieved, {text_input} /n/n Abstracts: /n {abstract_by_doi}'      ###
 
         stopped_by_firewall = False
         done_processing = False
@@ -141,10 +143,10 @@ def home_page():
 
 
                     #testing llm
-                    output = llm_test(text_input)
+                    # output = llm_test(text_input)
 
                     # #full llm                                                             ###
-                    #output = llm_test(full_text_input)
+                    output = llm_test(full_text_input)
 
                     done_processing = True
                 else:
