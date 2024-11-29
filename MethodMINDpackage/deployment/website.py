@@ -149,7 +149,6 @@ def home_page():
         </p>
     """, unsafe_allow_html=True)
 
-
 def disclaimer_page():
     #disclaimer page
 
