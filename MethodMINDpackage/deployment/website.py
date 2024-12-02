@@ -3,8 +3,7 @@ from PIL import Image
 from MethodMINDpackage.orchestraDitector.LLM import llm_test
 from MethodMINDpackage.train.PubMed import get_pubmed_data
 from MethodMINDpackage.deployment.firewall import firewall
-#from MethodMINDpackage.orchestraDitector import retrival           ###
-from MethodMINDpackage.train.PubMed import get_abstract_by_doi         ###
+from MethodMINDpackage.orchestraDitector.retrival import search_similarity, query_by_id, get_abstract_by_doi
 
 
 
@@ -96,7 +95,7 @@ def home_page():
     if 'pubmed_data' not in st.session_state:
         with st.spinner('Loading... Please wait'):
             # Fetch PubMed data only once and store it in session state
-            st.session_state.pubmed_data = get_pubmed_data()
+            st.session_state.pubmed_data = get_pubmed_data()              #### review this!!!!
 
     df = st.session_state.pubmed_data
 
@@ -111,7 +110,11 @@ def home_page():
     if st.button('Submit'):
 
         # #hard coded
-        abstract_by_doi = get_abstract_by_doi(text_input, doi= None)                                 #####
+        similarity = search_similarity(text_input)
+        id = similarity[0][0][0].id
+        doi_from_ID = query_by_id(id)
+        doi = doi_from_ID[0][0]['doi']
+        abstract_by_doi = get_abstract_by_doi(doi= doi)[0]                              #####
 
         st.write(f"Abstract found: {abstract_by_doi}")
 
