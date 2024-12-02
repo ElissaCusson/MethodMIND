@@ -9,13 +9,7 @@ from pymilvus import Collection
 from MethodMINDpackage.train.database import connectDB_alias, disconnect_alias, connectload, disconnect_client
 import requests
 import xml.etree.ElementTree as ET
-
-
-########### MVP TEST
-user_query = ''
-user_query = "Which methods can I use to measure tremor decrease and gait improvement in Parkinson patients receiving deep brain stimulation?"
-
-###############
+from collections import defaultdict
 
 def user_input_enhancing(user_input):
     """
@@ -94,29 +88,6 @@ def test_embedding(query):
     embedding = output.last_hidden_state.mean(dim=1).detach().squeeze().numpy()
     return embedding
 
-
-# Test
-# user_query = "Which methods can I use to measure tremor decrease and gait improvement in Parkinson patients receiving deep brain stimulation?"
-# embedded_query = user_input_enhancing(user_query)
-
-# if isinstance(embedded_query, str):
-#     # Handle error message
-#     print(embedded_query)
-# else:
-#     # Process embeddings
-#     print(f"Generated {len(embedded_query)} embeddings.")
-
-
-# def search_similarity(query, k=3):
-#     vectorstore = Milvus(
-#         connection_args={
-#             "uri": DATABASE_PATH,  # Path to the Milvus database (or connection details)
-#         },
-#         embedding_function=test_embedding(query)
-#     )
-#     results = vectorstore.similarity_search(query, k=k)
-#     return results
-
 def search_similarity(query, k=3):
     if query is None or not query.strip():
         return [None, False, "Query is required."]
@@ -177,98 +148,136 @@ def query_by_id_client(query_id=None):
         disconnect_client(client, collection_name="MethodVectors")
         return None
 
-def query_by_id(query_id=None):
+def query_by_id(set_query_ids=None):
     """
-    Retrieve metadata and vector data for a specific ID from the collection.
+    Retrieve metadata for a specific ID from the collection.
 
     Args:
-        query_id (int): The ID to search for.
+        set_query_ids: A set of the ID to search for.
 
     Returns:
-        list: Query results containing matched metadata and vector data.
+        nested list: Query results containing matched metadata and vector data.
     """
-    if query_id is None:
-        print("Query ID is required.")
-        return [None, False, "Query ID is required."]
+    metadata_list = []
+    for query_id in set_query_ids:
+        if query_id is None:
+            print("Query ID is required.")
+            return [None, False, "Query ID is required."]
 
-    # Connect and load the collection
-    client_alias = connectDB_alias()
-    if client_alias is None:
-        print("Failed to connect to the database.")
-        return [None, False, "Failed to connect to the database."]
+        # Connect and load the collection
+        client_alias = connectDB_alias()
+        if client_alias is None:
+            print("Failed to connect to the database.")
+            return [None, False, "Failed to connect to the database."]
 
-    collection = Collection(name="MethodVectors", using=client_alias)
+        collection = Collection(name="MethodVectors", using=client_alias)
 
-    # Build filter expression for ID
-    filter_expression = f"id == {query_id}"
+        # Build filter expression for ID
+        filter_expression = f"id == {query_id}"
 
-    # Perform the query using Collection.query()
-    try:
-        results = collection.query(
-            expr=filter_expression,  # Filter by ID
-            output_fields=["title", "doi", "keywords", "full_text_link", "publication_date"]  # Specify fields to retrieve
-        )
-        print(f"Query completed. Retrieved {len(results)} results.")
-        return [results, True]
-    except Exception as e:
-        print(f"An error occurred during query: {e}")
-        return [None, False, f"An error occurred during query: {e}"]
-    finally:
-        # Always disconnect after query
-        disconnect_alias()
+        # Perform the query using Collection.query()
+        try:
+            results = collection.query(
+                expr=filter_expression,  # Filter by ID
+                output_fields=["title", "doi", "keywords", "full_text_link", "publication_date"]  # Specify fields to retrieve
+            )
+            print(f"Query completed. Retrieved {len(results)} results.")
+            metadata_list.append(results)
+        except Exception as e:
+            print(f"An error occurred during query: {e}")
+            return [None, False, f"An error occurred during query: {e}"]
+        finally:
+            # Always disconnect after query
+            disconnect_alias()
+    return [metadata_list, True]
 
-def get_abstract_by_doi(doi= None):
-    if doi == None:
-        return [None, False, "DOI not provided"]
-    api_key=PUBMED_API_KEY
-    # Step 1: Search for the article using ESearch to get the PubMed ID (PMID) from the DOI
-    search_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
-    search_params = {
-        "db": "pubmed",
-        "term": f"doi:{doi}",  # Search for the DOI
-        "retmode": "json",
-        "api_key": api_key
-    }
-    search_response = requests.get(search_url, params=search_params)
-    search_data = search_response.json()
-    # Check if a PMID was found for the DOI
-    if "idlist" not in search_data["esearchresult"] or not search_data["esearchresult"]["idlist"]:
-        return [None, False, "No article PMID found for the given DOI."]
-    pmid = search_data["esearchresult"]["idlist"][0]  # Get the first PMID
-    # Step 2: Fetch article details using EFetch
-    efetch_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
-    efetch_params = {
-        "db": "pubmed",
-        "id": pmid,
-        "retmode": "xml",
-        "api_key": api_key
-    }
-    fetch_response = requests.get(efetch_url, params=efetch_params)
-    # Parse the XML response
-    root = ET.fromstring(fetch_response.content)
-    # Extract the abstract
-    abstract_elem = root.find(".//AbstractText")
-    if abstract_elem is not None:
-        return [abstract_elem.text, True]
-    else:
-        return [None, False, "No abstract found for the given DOI."]
+def get_abstract_by_doi(dois= [None]):
+    abstract_list = []
+    for doi in dois:
+        print(doi)
+        if doi == None:
+            abstract_list.append(None)
+        api_key=PUBMED_API_KEY
+        # Step 1: Search for the article using ESearch to get the PubMed ID (PMID) from the DOI
+        search_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+        search_params = {
+            "db": "pubmed",
+            "term": f"doi:{doi}",  # Search for the DOI
+            "retmode": "json",
+            "api_key": api_key
+        }
+        search_response = requests.get(search_url, params=search_params)
+        search_data = search_response.json()
+        # Check if a PMID was found for the DOI
+        if "idlist" not in search_data["esearchresult"] or not search_data["esearchresult"]["idlist"]:
+            abstract_list.append('NR')
+            continue
+        pmid = search_data["esearchresult"]["idlist"][0]  # Get the first PMID
+        # Step 2: Fetch article details using EFetch
+        efetch_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+        efetch_params = {
+            "db": "pubmed",
+            "id": pmid,
+            "retmode": "xml",
+            "api_key": api_key
+        }
+        fetch_response = requests.get(efetch_url, params=efetch_params)
+        # Parse the XML response
+        root = ET.fromstring(fetch_response.content)
+        # Extract the abstract
+        abstract_elem = root.find(".//AbstractText")
+        if abstract_elem is not None:
+            abstract_list.append(abstract_elem.text)
+        else:
+            abstract_list.append('NR')
+    return [abstract_list, True]
+
+def handle_multiple_similarities(best_matches):
+    """ Gets a list of the most similar chunks and returns a set of abstract IDs"""
+    return set([match.id for match in best_matches])
+
+def handle_multiple_metadata(list_metadata):
+    """ Gets a list of metadata and returns a dict with the metadata grouped by category"""
+    ordered_metadata = defaultdict(list)
+    for i, metadata in enumerate(list_metadata):
+        ordered_metadata['id'].append(metadata[0]['id'])
+        ordered_metadata['title'].append(metadata[0]['title'])
+        ordered_metadata['doi'].append(metadata[0]['doi'])
+        ordered_metadata['keywords'].append(metadata[0]['keywords'])
+        ordered_metadata['full_text_link'].append(metadata[0]['full_text_link'])
+        ordered_metadata['publication_date'].append(metadata[0]['publication_date'])
+    return ordered_metadata
 
 
 if __name__=='__main__':
     pass
     ##############
 
+    # Input enhanced Test
+    # user_query = "Which methods can I use to measure tremor decrease and gait improvement in Parkinson patients receiving deep brain stimulation?"
+    # embedded_query = user_input_enhancing(user_query)
+
+    ########### MVP TEST
+    user_query = ''
+    user_query = "Which methods can I use to measure tremor decrease and gait improvement in Parkinson patients receiving deep brain stimulation?"
+
+    ###############
+
     # # Display the most similar document
-    # similarity = search_similarity(user_query, k=10)
-    # print("Most similar documents:", similarity)
-    # print("Most similar documents:", similarity[0][0][0].id)
+    similarity = search_similarity(user_query, k=10)
+    # print(similarity)
+
+    # Multiple similarity test:
+    multiple_similarities = handle_multiple_similarities(similarity[0][0])
+    # print(multiple_similarities)
 
     # # query by id tests:
-    # print(query_by_id(query_id=None))
-    # print(query_by_id(query_id=454267350528557148))
-    # print(query_by_id(query_id=454267350528557148)[0][0]['doi'])
+    ids=query_by_id(set_query_ids=multiple_similarities)
+    # print(ids)
 
+    dois = set(handle_multiple_metadata(ids[0])['doi'])
+    print(len(dois))
     # # get_abstract_by_doi tests:
-    # print(get_abstract_by_doi(doi= None))
-    # print(get_abstract_by_doi(doi= '10.1007/s00296potatoe-011-2267-2'))
-    # print(get_abstract_by_doi(doi= '10.1007/s00296-011-2267-2'))
+    print(get_abstract_by_doi(dois= [None]))
+    print(get_abstract_by_doi(dois= ['10.1007/s00296potatoe-011-2267-2']))
+    print(get_abstract_by_doi(dois= dois))

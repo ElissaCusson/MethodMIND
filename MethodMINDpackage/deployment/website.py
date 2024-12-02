@@ -1,7 +1,7 @@
 import streamlit as st
 from PIL import Image
 from MethodMINDpackage.orchestraDitector.LLM import llm_test
-from MethodMINDpackage.orchestraDitector.retrival import search_similarity, query_by_id, get_abstract_by_doi
+from MethodMINDpackage.orchestraDitector.retrival import search_similarity, query_by_id, get_abstract_by_doi, handle_multiple_similarities, handle_multiple_metadata
 from MethodMINDpackage.deployment.firewall import firewall_all_keywords
 
 st.set_page_config(layout="wide")
@@ -95,10 +95,11 @@ def home_page():
 
         # #hard coded
         similarity = search_similarity(text_input)
-        id = similarity[0][0][0].id
-        doi_from_ID = query_by_id(id)
-        doi = doi_from_ID[0][0]['doi']
-        abstract_by_doi = get_abstract_by_doi(doi= doi)[0]                              #####
+        ids = handle_multiple_similarities(similarity[0][0])
+        metadata_list = query_by_id(ids)
+        metadata_dict = handle_multiple_metadata(metadata_list[0])
+        dois = set(metadata_dict['doi'])
+        abstract_by_doi = get_abstract_by_doi(dois= dois)[0]                              #####
 
         #st.write(f"Abstract found: {abstract_by_doi}")
 
