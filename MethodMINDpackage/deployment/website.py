@@ -1,11 +1,8 @@
 import streamlit as st
 from PIL import Image
 from MethodMINDpackage.orchestraDitector.LLM import llm_test
+from MethodMINDpackage.orchestraDitector.retrival import search_similarity, query_by_id, get_abstract_by_doi
 from MethodMINDpackage.deployment.firewall import firewall_all_keywords
-#from MethodMINDpackage.orchestraDitector import retrival           ###
-#from MethodMINDpackage.train.PubMed import get_abstract_by_doi         ###
-
-
 
 st.set_page_config(layout="wide")
 
@@ -97,7 +94,11 @@ def home_page():
     if st.button('Submit'):
 
         # #hard coded
-        #abstract_by_doi = get_abstract_by_doi(text_input, doi= None)                                 #####
+        similarity = search_similarity(text_input)
+        id = similarity[0][0][0].id
+        doi_from_ID = query_by_id(id)
+        doi = doi_from_ID[0][0]['doi']
+        abstract_by_doi = get_abstract_by_doi(doi= doi)[0]                              #####
 
         #st.write(f"Abstract found: {abstract_by_doi}")
 
