@@ -136,7 +136,7 @@ def search_similarity(query, k=3):
 
 # # Display the most similar document
 similarity = search_similarity(user_query, k=1)
-# print("Most similar documents:", similarity)
+print("Most similar documents:", similarity)
 
 def query_by_id_client(query_id=None):
     """
