@@ -133,10 +133,9 @@ def connectDB_alias(database_name="MethodMIND"):
         connections.connect(alias="default", uri=f"{db_path}")
     return "default"
 
-
-
 if __name__=='__main__':
     pass
     #TEST
     # Call the function
     #client=create_milvus("MethodMIND")
+
