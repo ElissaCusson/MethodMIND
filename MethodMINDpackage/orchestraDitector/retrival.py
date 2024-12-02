@@ -210,6 +210,7 @@ def query_by_id(query_id=None):
         )
         print(f"Query completed. Retrieved {len(results)} results.")
         return [results, True]
+
     except Exception as e:
         print(f"An error occurred during query: {e}")
         return [None, False, f"An error occurred during query: {e}"]

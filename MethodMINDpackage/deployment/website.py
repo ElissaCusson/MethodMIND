@@ -7,6 +7,7 @@ from MethodMINDpackage.deployment.firewall import firewall_all_keywords
 st.set_page_config(layout="wide")
 
 
+#                                                   HOME
 
 def home_page():
     #home page
@@ -90,13 +91,19 @@ def home_page():
     #request
     text_input = st.text_area('Type your request here:')
 
+
+#                                                      TASKS
+    #TASK START
     #loading spinner
     if st.button('Submit'):
 
         # #hard coded
         similarity = search_similarity(text_input)
         id = similarity[0][0][0].id
+
+        #important data here
         doi_from_ID = query_by_id(id)
+
         doi = doi_from_ID[0][0]['doi']
         abstract_by_doi = get_abstract_by_doi(doi= doi)[0]                              #####
 
@@ -145,13 +152,23 @@ def home_page():
 
                 bar.progress(100)
 
-        #displaying output
+        #                                               OUTPUT
+
         if done_processing:
+            #results output
             st.markdown(f"""<div style="border: 2px solid #4CAF50; padding: 10px; border-radius: 5px;">{output}</div>""", unsafe_allow_html=True)
 
-            abstracts = '''insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts
-            insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts
-            insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts insert abstracts '''
+
+            #abstracts output
+            abstract_title = doi_from_ID[0][0]['title']
+            full_text_link = doi_from_ID[0][0]['full_text_link']
+
+            #FOR 1 ABSTRACT!
+            abstracts = f'''
+                <span style="color: blue;">{abstract_title}</span>:
+                <a href="{full_text_link}" target="_blank" style="color: yellow;">{full_text_link}</a><br><br>
+                {abstract_by_doi}
+            '''
             st.write('###')
 
             #displaying abstracts
@@ -170,6 +187,8 @@ def home_page():
         </p>
     """, unsafe_allow_html=True)
 
+#                                                    DISCLAIMER
+
 def disclaimer_page():
     #disclaimer page
 
@@ -183,6 +202,8 @@ def disclaimer_page():
              applying them to your work. Always consult primary sources and expert opinions
              when making important research decisions.''')
 
+#                                                      ABOUT
+
 def about_page():
     #about page
 
@@ -193,6 +214,7 @@ def about_page():
         insert credits
     ''')
 
+#                                                    NAVIGATION
 
 #navigation sidebar (left column)
 st.sidebar.title("Navigation")
