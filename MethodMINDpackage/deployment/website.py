@@ -6,6 +6,12 @@ from MethodMINDpackage.deployment.firewall import firewall_all_keywords
 
 st.set_page_config(layout="wide")
 
+#                                                  TO DO
+
+#code for number of abstracts
+#add emoji/gif while loading
+#explain how it works
+
 
 #                                                   HOME
 
@@ -14,7 +20,6 @@ def home_page():
 
     #displaying logo at the center
 
-    #absolute path from my computer, may not work on other computers!!!!!
     image_path = "MethodMINDpackage/deployment/images/logo.png"
     try:
         # Try to open the image
@@ -85,7 +90,7 @@ def home_page():
     st.write('###')
 
     #number of abstracts
-    slider_values = [1, 3, 5, 10, 15, 20, 30]
+    slider_values = [5, 7, 10, 15, 20, 30]
     number_of_abstracts = st.select_slider('Select a number of abstracts to return:', options=slider_values, value=10)
 
     #request
@@ -102,47 +107,57 @@ def home_page():
         with st.spinner('Processing... Please wait'):
 
             #loading progress
-            with st.empty():
-                bar = st.progress(0)
+            progress_bar = st.empty()
+            progress_bar.progress(0)
+            progress_text = st.empty()
 
-                #here we do the task
+            #here we do the task
+            progress_text.text('Validating input...🤔')
 
-                #new firewall
-                is_valid = firewall_all_keywords(text_input)
-                if is_valid:
-                    # with st.empty():
-                    #     st.write('running LLM...')
-                    bar.progress(15)
+            #new firewall
+            is_valid = firewall_all_keywords(text_input)
+            if is_valid:
+                # with st.empty():
+                #     st.write('running LLM...')
 
-                    # #hard coded
-                    similarity = search_similarity(text_input)
-                    id = similarity[0][0][0].id
+                progress_text.text('Searching for relevant abstracts...🔍')
+                progress_bar.progress(15)
 
-                    bar.progress(25)
+                # #hard coded
+                similarity = search_similarity(text_input)
+                id = similarity[0][0][0].id
 
-                    #important data here
-                    doi_from_ID = query_by_id(id)
+                progress_text.text('Fetching DOI information...🎣')
+                progress_bar.progress(25)
 
-                    bar.progress(40)
+                #important data here
+                doi_from_ID = query_by_id(id)
 
-                    doi = doi_from_ID[0][0]['doi']
-                    abstract_by_doi = get_abstract_by_doi(doi= doi)[0]
+                progress_text.text('Retrieving abstracts...🛒')
+                progress_bar.progress(40)
 
-                    bar.progress(55)
+                doi = doi_from_ID[0][0]['doi']
+                abstract_by_doi = get_abstract_by_doi(doi= doi)[0]
 
-                    #testing llm
-                    output = llm_test(text_input)
+                progress_text.text('Generating answer...🚀')
+                progress_bar.progress(55)
 
-                    # #full llm                                                             ###
-                    #output = llm_test(full_text_input)
+                #testing llm
+                output = llm_test(text_input)
 
-                    done_processing = True
-                else:
-                    #in case there are other types of errors
-                    stopped_by_firewall = True
+                #full text input for llm
+                full_text_input = f'''Based on the following abstracts, {text_input} \n\n Abstracts: \n {abstract_by_doi}'''
 
+                # #full llm
+                #output = llm_test(full_text_input)
 
-                bar.progress(100)
+                done_processing = True
+            else:
+                #in case there are other types of errors
+                stopped_by_firewall = True
+
+            progress_text.text('Done ✅')
+            progress_bar.progress(100)
 
         #                                               OUTPUT
 
@@ -155,12 +170,27 @@ def home_page():
             abstract_title = doi_from_ID[0][0]['title']
             full_text_link = doi_from_ID[0][0]['full_text_link']
 
+            #FOR MULTIPLE ABSTRACTS
+            abstracts_list = [
+                {"title": "Abstract 1", "link": "https://example.com/1"},
+                {"title": "Abstract 2", "link": "https://example.com/2"},
+                {"title": "Abstract 3", "link": "https://example.com/3"},
+            ]
+
+            # Generate the HTML for multiple abstracts
+            abstracts = ""
+            for abstract in abstracts_list:
+                abstracts += f'''
+                            {abstract["title"]}:
+                            <a href="{abstract["link"]}" target="_blank" style="color: yellow;">{abstract["link"]}</a><br><br>
+                        '''
+
             #FOR 1 ABSTRACT!
             abstracts = f'''
-                <span style="color: blue;">{abstract_title}</span>:
+                {abstract_title}:
                 <a href="{full_text_link}" target="_blank" style="color: yellow;">{full_text_link}</a><br><br>
-                {abstract_by_doi}
             '''
+
             st.write('###')
 
             #displaying abstracts
