@@ -75,11 +75,40 @@ def store_chunk_embeddings(client, collection_name):
     # Return the final list of embeddings with metadata
     return embedded_chunks_with_metadata
 
+def store_abstracts_embeddings(client, collection_name):
+    df = get_pubmed_data()
+    # Filter out rows where Abstract is None or empty
+    df = df[df['Abstract'].notna() & (df['Abstract'].str.strip() != '')]
+
+    abstracts_list = df['Abstract'].to_list()
+
+    # Iterate through each abstract and corresponding metadata
+    for i, abstract in enumerate(abstracts_list):
+        # Embed the abstract text
+        embedding = embed_text(abstract).squeeze(0).numpy()
+
+        # Store the embedding and metadata together
+        group_embeddings = {
+            "embedding": embedding,
+            "title": df.iloc[i]['Title'],
+            "doi": df.iloc[i]['DOI'],
+            "keywords": df.iloc[i]['Keywords'],
+            "publication_date": df.iloc[i]['Publication Date'],
+            "full_text_link": df.iloc[i]['Full Text Link']
+        }
+
+        # Insert into Milvus
+        client.insert(collection_name=collection_name, data=[group_embeddings])
+        print(f"Inserted abstract {i} into collection {collection_name}.")
+
+    return print('Embedded abstracts added in Milvus')
+
 
 if __name__=='__main__':
-    pass
+    #pass
     # Store embeddings in Milvus
-    store_chunk_embeddings(client, collection_name)
+    #store_chunk_embeddings(client, collection_name) # chunk embeddings
+    #store_abstracts_embeddings(client, collection_name) # abstract embeddings
 
     row_count = client.get_collection_stats(collection_name=collection_name)['row_count']
     print(f"\n {database_name} database as {row_count} in collection {collection_name}")
