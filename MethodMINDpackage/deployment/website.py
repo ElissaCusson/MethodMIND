@@ -97,21 +97,6 @@ def home_page():
     #loading spinner
     if st.button('Submit'):
 
-        # #hard coded
-        similarity = search_similarity(text_input)
-        id = similarity[0][0][0].id
-
-        #important data here
-        doi_from_ID = query_by_id(id)
-
-        doi = doi_from_ID[0][0]['doi']
-        abstract_by_doi = get_abstract_by_doi(doi= doi)[0]                              #####
-
-        #st.write(f"Abstract found: {abstract_by_doi}")
-
-        #for llm search
-        #full_text_input = f'Based on the most relevant abstracts retrieved, {text_input} /n/n Abstracts: /n {abstract_by_doi}'      ###
-
         stopped_by_firewall = False
         done_processing = False
         with st.spinner('Processing... Please wait'):
@@ -127,16 +112,23 @@ def home_page():
                 if is_valid:
                     # with st.empty():
                     #     st.write('running LLM...')
+                    bar.progress(15)
+
+                    # #hard coded
+                    similarity = search_similarity(text_input)
+                    id = similarity[0][0][0].id
+
                     bar.progress(25)
 
-                    # #similarity abstracts                                                 ###
-                    #similarity = retrival.search_similarity(text_input, number_of_abstracts)
+                    #important data here
+                    doi_from_ID = query_by_id(id)
 
+                    bar.progress(40)
 
+                    doi = doi_from_ID[0][0]['doi']
+                    abstract_by_doi = get_abstract_by_doi(doi= doi)[0]
 
-                    #insert other procedures here
-
-
+                    bar.progress(55)
 
                     #testing llm
                     output = llm_test(text_input)
