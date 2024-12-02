@@ -116,7 +116,7 @@ def connectDB_client(database_name="MethodMIND"):
     return client
 
 def connectload(database_name="MethodMIND", collection_name="MethodVectors"):
-    client=connectDB_client("MethodMIND")
+    client=connectDB_client(database_name)
     checkcollection(client,collection_name)
     return client,collection_name
 

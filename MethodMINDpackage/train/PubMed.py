@@ -83,14 +83,7 @@ def get_pubmed_data():
 
     return df
 
-
 if __name__=='__main__':
     pass
-    # Example usage
-    # doi = "10.3390/nu16223863"  # Replace with a valid DOI
-    # api_key = "781f1d6e9a1ddd33b37d1ef4facf505a7209"  # Replace with your PubMed API key
-    # abstract = get_abstract_by_doi(doi, api_key)
-    # if abstract:
-    #     print("Abstract:", abstract)
     # # Test the function
     # print(get_pubmed_data())
