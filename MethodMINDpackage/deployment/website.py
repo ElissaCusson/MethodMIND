@@ -102,8 +102,6 @@ def home_page():
     #loading spinner
     if st.button('Submit'):
 
-        stopped_by_firewall = False
-        done_processing = False
         with st.spinner('Processing... Please wait'):
 
             #loading progress
@@ -111,21 +109,33 @@ def home_page():
             progress_bar.progress(0)
             progress_text = st.empty()
 
+            #verifying each step
+            done_processing = True
+            stopped_by_firewall = False
+            stopped_at_similarity = False
+            stopped_at_query_by_id = False
+            stopped_at_abstract_by_doi = False
+
             #here we do the task
             progress_text.text('Validating input...🤔')
 
             #new firewall
             is_valid = firewall_all_keywords(text_input)
             if is_valid:
-                # with st.empty():
-                #     st.write('running LLM...')
 
                 progress_text.text('Searching for relevant abstracts...🔍')
                 progress_bar.progress(15)
 
                 # #hard coded
                 similarity = search_similarity(text_input)
-                id = similarity[0][0][0].id
+
+                #verify similarity step
+                if similarity[1] is False:
+                    stopped_at_similarity = True
+                    done_processing = False
+                    id = 0
+                else:
+                    id = similarity[0][0][0].id
 
                 progress_text.text('Fetching DOI information...🎣')
                 progress_bar.progress(25)
@@ -133,11 +143,23 @@ def home_page():
                 #important data here
                 doi_from_ID = query_by_id(id)
 
+                #verify query by id step
+                if doi_from_ID[1] is False:
+                    stopped_at_query_by_id = True
+                    done_processing = False
+                    doi = ''
+                else:
+                    doi = doi_from_ID[0][0]['doi']
+
                 progress_text.text('Retrieving abstracts...🛒')
                 progress_bar.progress(40)
 
-                doi = doi_from_ID[0][0]['doi']
                 abstract_by_doi = get_abstract_by_doi(doi= doi)[0]
+
+                #verify abstract by doi step
+                if abstract_by_doi[1] is False:
+                    stopped_at_abstract_by_doi = True
+                    done_processing = False
 
                 progress_text.text('Generating answer...🚀')
                 progress_bar.progress(55)
@@ -151,7 +173,6 @@ def home_page():
                 # #full llm
                 #output = llm_test(full_text_input)
 
-                done_processing = True
             else:
                 #in case there are other types of errors
                 stopped_by_firewall = True
@@ -200,6 +221,18 @@ def home_page():
         #if request is outside of scope
         elif stopped_by_firewall:
             st.subheader('The request is outside of the scope of the model. Please try again with another request.')
+
+        #if stopped at similarity step
+        elif stopped_at_similarity:
+            st.subheader(similarity[2])
+
+        #if stopped at query by id step
+        elif stopped_at_query_by_id:
+            st.subheader(doi_from_ID[2])
+
+        #if stopped at abstract by doi
+        elif stopped_at_abstract_by_doi:
+            st.subheader(abstract_by_doi[2])
 
     #disclaimer
     #st.caption('MethodMIND can make mistakes. Please check important information')
