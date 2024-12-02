@@ -116,7 +116,7 @@ def connectDB_client(database_name="MethodMIND"):
     return client
 
 def connectload(database_name="MethodMIND", collection_name="MethodVectors"):
-    client=connectDB_client("MethodMIND")
+    client=connectDB_client(database_name)
     checkcollection(client,collection_name)
     return client,collection_name
 
@@ -133,6 +133,9 @@ def connectDB_alias(database_name="MethodMIND"):
         connections.connect(alias="default", uri=f"{db_path}")
     return "default"
 
-#TEST
-# Call the function
-# create_milvus("MethodMIND")
+if __name__=='__main__':
+    pass
+    #TEST
+    # Call the function
+    #client=create_milvus("MethodMIND")
+
