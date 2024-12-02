@@ -3,7 +3,9 @@ import os
 # Access the environment variables
 PUBMED_API_KEY = os.environ.get("PUBMED_API_KEY")
 PUBMED_BASE_URL = os.environ.get("PUBMED_BASE_URL")
-PUBMED_SEARCH_STRATEGY = os.environ.get("PUBMED_SEARCH_STRATEGY")
+PUBMED_SEARCH_STRATEGY_2014_to_2017 = os.environ.get("PUBMED_SEARCH_STRATEGY_2014_to_2017")
+PUBMED_SEARCH_STRATEGY_2018_to_2020 = os.environ.get("PUBMED_SEARCH_STRATEGY_2018_to_2020")
+PUBMED_SEARCH_STRATEGY_2021_to_2024 = os.environ.get("PUBMED_SEARCH_STRATEGY_2021_to_2024")
 
 # Database parameters
 DIRENV_DIR = os.environ.get("DIRENV_DIR")
