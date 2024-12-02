@@ -194,9 +194,9 @@ def query_by_id(set_query_ids=None):
 def get_abstract_by_doi(dois= [None]):
     abstract_list = []
     for doi in dois:
-        print(doi)
         if doi == None:
             abstract_list.append(None)
+            continue
         api_key=PUBMED_API_KEY
         # Step 1: Search for the article using ESearch to get the PubMed ID (PMID) from the DOI
         search_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
