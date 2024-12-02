@@ -3,7 +3,6 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 from MethodMINDpackage.params import PUBMED_API_KEY, PUBMED_BASE_URL, PUBMED_SEARCH_STRATEGY
 
-
 def get_pubmed_data():
     '''This function calls the PubMed API and returns abstracts, metadata, and full-text links in a DataFrame'''
 
@@ -11,7 +10,7 @@ def get_pubmed_data():
     search_params = {
         "db": "pubmed",
         "term": PUBMED_SEARCH_STRATEGY,
-        "retmax": 7600,  # Number of results to retrieve
+        "retmax": 100,  # Number of results to retrieve
         "retmode": "json",
         "api_key": PUBMED_API_KEY
     }
@@ -103,6 +102,7 @@ def get_pubmed_data():
 
     return df
 
-
-# Test the function
-print(get_pubmed_data())
+if __name__=='__main__':
+    pass
+    # # Test the function
+    # print(get_pubmed_data())

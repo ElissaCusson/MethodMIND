@@ -1,6 +1,8 @@
 import os
 from pymilvus import FieldSchema, CollectionSchema, DataType, MilvusClient, connections
 from MethodMINDpackage.params import *
+# from pymilvus import Collection
+
 
 def define_schema():
     fields = [
@@ -50,12 +52,15 @@ def create_index(client,collection_name="MethodVectors"):
     # print("Index vector created successfully.")
     return
 
-def disconnect(client, collection_name="MethodVectors"):
+def disconnect_client(client, collection_name="MethodVectors"):
 
     client.flush(collection_name) # Pass collection_name directly as a string
     client.close()
     print("Milvus client connection closed.")
     return
+
+def disconnect_alias(client_alias="default"):
+    connections.disconnect(alias=client_alias)
 
 def checkcollection(client,collection_name="MethodVectors"):
     if collection_name not in client.list_collections():
@@ -99,12 +104,7 @@ def create_milvus(database_name="MethodMIND"):
 
     return client
 
-def connectload(database_name="MethodMIND", collection_name="MethodVectors"):
-    client=connectDB("MethodMIND")
-    checkcollection(client,collection_name)
-    return client,collection_name
-
-def connectDB(database_name="MethodMIND"):
+def connectDB_client(database_name="MethodMIND"):
     db_path = f"{DATA_DIRECTORY}/{database_name}.db"
 
     # Check if the database file exists
@@ -115,6 +115,27 @@ def connectDB(database_name="MethodMIND"):
         client = MilvusClient(uri=db_path)
     return client
 
-#TEST
-# Call the function
-# create_milvus("MethodMIND")
+def connectload(database_name="MethodMIND", collection_name="MethodVectors"):
+    client=connectDB_client(database_name)
+    checkcollection(client,collection_name)
+    return client,collection_name
+
+def connectDB_alias(database_name="MethodMIND"):
+    db_path = f"{DATA_DIRECTORY}/{database_name}.db"
+
+    # Check if the database file exists
+    if not os.path.exists(db_path):
+        print("Database does not exist")
+        return
+    else:
+    #     client = MilvusClient(uri=db_path)
+    # return client
+        connections.connect(alias="default", uri=f"{db_path}")
+    return "default"
+
+if __name__=='__main__':
+    pass
+    #TEST
+    # Call the function
+    #client=create_milvus("MethodMIND")
+

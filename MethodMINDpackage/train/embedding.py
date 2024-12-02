@@ -76,8 +76,10 @@ def store_chunk_embeddings(client, collection_name):
     return embedded_chunks_with_metadata
 
 
-# Store embeddings in Milvus
-store_chunk_embeddings(client, collection_name)
+if __name__=='__main__':
+    pass
+    # Store embeddings in Milvus
+    store_chunk_embeddings(client, collection_name)
 
-row_count = client.get_collection_stats(collection_name=collection_name)['row_count']
-print(f"\n {database_name} database as {row_count} in collection {collection_name}")
+    row_count = client.get_collection_stats(collection_name=collection_name)['row_count']
+    print(f"\n {database_name} database as {row_count} in collection {collection_name}")

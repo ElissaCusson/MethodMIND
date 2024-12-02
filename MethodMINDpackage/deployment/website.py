@@ -1,11 +1,12 @@
 import streamlit as st
 from PIL import Image
 from MethodMINDpackage.orchestraDitector.LLM import llm_test
-from MethodMINDpackage.train.PubMed import get_pubmed_data
-from MethodMINDpackage.deployment.firewall import firewall
-
+from MethodMINDpackage.orchestraDitector.retrival import search_similarity, query_by_id, get_abstract_by_doi
+from MethodMINDpackage.deployment.firewall import firewall_all_keywords
 
 st.set_page_config(layout="wide")
+
+
 
 def home_page():
     #home page
@@ -24,7 +25,6 @@ def home_page():
 
     #displaying title at the center
     st.markdown("<h1 style='text-align: center;'>Welcome to MethodMIND</h1>", unsafe_allow_html=True)
-    #st.columns(3)[1].title("Welcome to MethodMIND")
 
     #subheader
     st.markdown(
@@ -50,7 +50,7 @@ def home_page():
     #explaining how it works
     expander = st.expander("How it works:")
     expander.write("""
-        it's magic!
+        we'll implement this last
     """)
 
     #frequently asked questions
@@ -83,15 +83,27 @@ def home_page():
     #space
     st.write('###')
 
-    with st.spinner('Loading... Please wait'):
-        #getting PubMed keywords
-        df = get_pubmed_data()
+    #number of abstracts
+    slider_values = [1, 3, 5, 10, 15, 20, 30]
+    number_of_abstracts = st.select_slider('Select a number of abstracts to return:', options=slider_values, value=10)
 
     #request
     text_input = st.text_area('Type your request here:')
 
     #loading spinner
     if st.button('Submit'):
+
+        # #hard coded
+        similarity = search_similarity(text_input)
+        id = similarity[0][0][0].id
+        doi_from_ID = query_by_id(id)
+        doi = doi_from_ID[0][0]['doi']
+        abstract_by_doi = get_abstract_by_doi(doi= doi)[0]                              #####
+
+        #st.write(f"Abstract found: {abstract_by_doi}")
+
+        #for llm search
+        #full_text_input = f'Based on the most relevant abstracts retrieved, {text_input} /n/n Abstracts: /n {abstract_by_doi}'      ###
 
         stopped_by_firewall = False
         done_processing = False
@@ -102,11 +114,16 @@ def home_page():
                 bar = st.progress(0)
 
                 #here we do the task
-                is_valid = firewall(text_input, df)
+
+                #new firewall
+                is_valid = firewall_all_keywords(text_input)
                 if is_valid:
                     # with st.empty():
                     #     st.write('running LLM...')
                     bar.progress(25)
+
+                    # #similarity abstracts                                                 ###
+                    #similarity = retrival.search_similarity(text_input, number_of_abstracts)
 
 
 
@@ -116,6 +133,10 @@ def home_page():
 
                     #testing llm
                     output = llm_test(text_input)
+
+                    # #full llm                                                             ###
+                    #output = llm_test(full_text_input)
+
                     done_processing = True
                 else:
                     #in case there are other types of errors
@@ -139,7 +160,7 @@ def home_page():
 
         #if request is outside of scope
         elif stopped_by_firewall:
-            st.write('The request is outside of the scope of the model. Please try again with another request.')
+            st.subheader('The request is outside of the scope of the model. Please try again with another request.')
 
     #disclaimer
     #st.caption('MethodMIND can make mistakes. Please check important information')
