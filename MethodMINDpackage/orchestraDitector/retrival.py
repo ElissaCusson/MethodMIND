@@ -192,9 +192,6 @@ def query_by_id(set_query_ids=None):
             disconnect_alias()
     return [metadata_list, True]
 
-
-###################################################################################################
-#### Jaime's func
 def get_abstract_by_doi(metadata_list):
     api_key = PUBMED_API_KEY  # Ensure you have your API key available
     for metadata in metadata_list:
@@ -235,60 +232,15 @@ def get_abstract_by_doi(metadata_list):
         root = ET.fromstring(fetch_response.content)
 
         # Extract the abstract
-        abstract_elem = root.find(".//AbstractText")
-        if abstract_elem is not None:
-            metadata[0]['abstract'] = abstract_elem.text  # Add abstract to the metadata dictionary
+        abstract_elems = root.findall(".//AbstractText")
+        if abstract_elems:
+            full_abstract = " ".join([elem.text for elem in abstract_elems if elem.text])
+            metadata[0]['abstract'] = full_abstract
+
         else:
             metadata[0]['abstract'] = 'NR'  # If no abstract found
 
     return [metadata_list, True]  # Return the modified list of metadata dictionaries
-
-
-###################################################################################################
-
-
-# def get_abstract_by_doi(dois= [None]):
-#     """ Takes a list of DOIs returns a nested list of abstracts --> [abstract_list, True] """
-#     abstract_list = []
-#     for doi in dois:
-#         if doi == None:
-#             abstract_list.append(None)
-#             continue
-#         api_key=PUBMED_API_KEY
-#         # Step 1: Search for the article using ESearch to get the PubMed ID (PMID) from the DOI
-#         search_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
-#         search_params = {
-#             "db": "pubmed",
-#             "term": f"doi:{doi}",  # Search for the DOI
-#             "retmode": "json",
-#             "api_key": api_key
-#         }
-#         search_response = requests.get(search_url, params=search_params)
-#         search_data = search_response.json()
-#         # Check if a PMID was found for the DOI
-#         if "idlist" not in search_data["esearchresult"] or not search_data["esearchresult"]["idlist"]:
-#             abstract_list.append('NR')
-#             continue
-#         pmid = search_data["esearchresult"]["idlist"][0]  # Get the first PMID
-#         # Step 2: Fetch article details using EFetch
-#         efetch_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
-#         efetch_params = {
-#             "db": "pubmed",
-#             "id": pmid,
-#             "retmode": "xml",
-#             "api_key": api_key
-#         }
-#         fetch_response = requests.get(efetch_url, params=efetch_params)
-#         # Parse the XML response
-#         root = ET.fromstring(fetch_response.content)
-#         # Extract the abstract
-#         abstract_elems = root.findall(".//AbstractText")
-#         if abstract_elems:
-#             full_abstract = " ".join([elem.text for elem in abstract_elems if elem.text])
-#             abstract_list.append(full_abstract)
-#         else:
-#             abstract_list.append('NR')
-#     return [abstract_list, True]
 
 def handle_multiple_similarities(best_matches):
     """ Gets a list of the most similar chunks and returns a set of abstract IDs"""
@@ -331,15 +283,11 @@ if __name__=='__main__':
 
     # # query by id tests:
     ids=query_by_id(set_query_ids=multiple_similarities)
-    # print(ids)
+    print(ids)
 
-    dois = set(handle_multiple_metadata(ids[0])['doi'])
-    print(dois)
-    # # get_abstract_by_doi tests:
-
+    # dois = set(handle_multiple_metadata(ids[0])['doi'])
+    # print(len(dois))
+    # # # get_abstract_by_doi tests:
     # print(get_abstract_by_doi([None]))
     # print(get_abstract_by_doi(['10.1007/s00296potatoe-011-2267-2']))
-    abstracts = get_abstract_by_doi(ids[0])[0]
-    for abstract in abstracts:
-        print(abstract[0]['abstract'])
-        print('POTATOE')
+    print(get_abstract_by_doi(metadata_list = ids[0]))
