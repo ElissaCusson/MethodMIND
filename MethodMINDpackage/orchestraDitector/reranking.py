@@ -5,7 +5,7 @@ model_name = "castorini/monot5-base-msmarco"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
-def reranking(user_input, abstracts, n_results):
+def reranking(user_input, abstracts, n_results=5):
     # Rerank each document
     ranked_results = []
     for abtract in abstracts:
@@ -19,6 +19,6 @@ def reranking(user_input, abstracts, n_results):
     ranked_results = sorted(ranked_results, key=lambda x: x[1], reverse=True)
 
     # Get 5 best abstracts
-    results = ranked_results[0:5]
+    results = ranked_results[0:n_results]
 
     return results
