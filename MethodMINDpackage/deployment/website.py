@@ -145,36 +145,37 @@ def home_page():
                 if similarity[1] is False:
                     stopped_at_similarity = True
                     done_processing = False
-                    id = 0
+                    ids = 0
                 else:
-                    id = similarity[0][0][0].id
+                    ids = handle_multiple_similarities(similarity[0][0])
 
-                progress_text.text('Fetching DOI information...🎣')
-                progress_bar.progress(25)
+                    progress_text.text('Fetching DOI information...🎣')
+                    progress_bar.progress(25)
 
                 #important data here
-                doi_from_ID = query_by_id(id)
+                metadata_list = query_by_id(ids)
 
                 #verify query by id step
-                if doi_from_ID[1] is False:
+                if metadata_list[1] is False:
                     stopped_at_query_by_id = True
                     done_processing = False
-                    doi = ''
+                    dois = ''
                 else:
-                    doi = doi_from_ID[0][0]['doi']
+                    metadata_dict = handle_multiple_metadata(metadata_list[0])
+                    dois = set(metadata_dict['doi'])
 
-                progress_text.text('Retrieving abstracts...🛒')
-                progress_bar.progress(40)
+                    progress_text.text('Retrieving abstracts...🛒')
+                    progress_bar.progress(40)
 
-                abstract_by_doi = get_abstract_by_doi(doi= doi)[0]
+                abstract_by_doi = get_abstract_by_doi(dois= dois)[0]
 
                 #verify abstract by doi step
                 if abstract_by_doi[1] is False:
                     stopped_at_abstract_by_doi = True
                     done_processing = False
-
-                progress_text.text('Generating answer...🚀')
-                progress_bar.progress(55)
+                else:
+                    progress_text.text('Generating answer...🚀')
+                    progress_bar.progress(55)
 
                 #testing llm
                 output = llm_test(text_input)
@@ -189,26 +190,43 @@ def home_page():
                 #in case there are other types of errors
                 stopped_by_firewall = True
 
-            progress_text.text('Done ✅')
+
             progress_bar.progress(100)
 
         #                                               OUTPUT
 
         if done_processing:
+
+            progress_text.text('Done ✅')
+
             #results output
             st.markdown(f"""<div style="border: 2px solid #4CAF50; padding: 10px; border-radius: 5px;">{output}</div>""", unsafe_allow_html=True)
 
 
             #abstracts output
-            abstract_title = doi_from_ID[0][0]['title']
-            full_text_link = doi_from_ID[0][0]['full_text_link']
+            def remove_duplicates_preserving_order(iterable):
+                seen = set()
+                return [item for item in iterable if not (item in seen or seen.add(item))]
 
-            #FOR MULTIPLE ABSTRACTS
-            abstracts_list = [
-                {"title": "Abstract 1", "link": "https://example.com/1"},
-                {"title": "Abstract 2", "link": "https://example.com/2"},
-                {"title": "Abstract 3", "link": "https://example.com/3"},
-            ]
+            # Remove duplicates while preserving order
+            abstract_title = remove_duplicates_preserving_order(metadata_dict['title'])
+            full_text_link = remove_duplicates_preserving_order(metadata_dict['full_text_link'])
+            publication_date = remove_duplicates_preserving_order(metadata_dict['publication_date'])
+
+            # For multiple abstracts
+            abstracts_list = []
+
+            # Checking for length
+            if len(abstract_title) == len(full_text_link) and len(abstract_title) == len(publication_date):
+                # Creating abstracts_list using zip
+                for title, link, date in zip(abstract_title, full_text_link, publication_date):
+                    metadata = {}
+                    metadata['title'] = title
+                    metadata['link'] = link
+                    metadata['date'] = date
+                    abstracts_list.append(metadata)
+            else:
+                st.subheader('Check this through')
 
             # Generate the HTML for multiple abstracts
             abstracts = ""
@@ -218,11 +236,11 @@ def home_page():
                             <a href="{abstract["link"]}" target="_blank" style="color: yellow;">{abstract["link"]}</a><br><br>
                         '''
 
-            #FOR 1 ABSTRACT!
-            abstracts = f'''
-                {abstract_title}:
-                <a href="{full_text_link}" target="_blank" style="color: yellow;">{full_text_link}</a><br><br>
-            '''
+            # #FOR 1 ABSTRACT!
+            # abstracts = f'''
+            #     {abstract_title}:
+            #     <a href="{full_text_link}" target="_blank" style="color: yellow;">{full_text_link}</a><br><br>
+            # '''
 
             st.write('###')
 
@@ -240,7 +258,7 @@ def home_page():
 
         #if stopped at query by id step
         elif stopped_at_query_by_id:
-            st.subheader(doi_from_ID[2])
+            st.subheader(metadata_list[2])
 
         #if stopped at abstract by doi
         elif stopped_at_abstract_by_doi:

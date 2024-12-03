@@ -273,7 +273,7 @@ if __name__=='__main__':
 
     # # query by id tests:
     ids=query_by_id(set_query_ids=multiple_similarities)
-    # print(ids)
+    print(ids)
 
     dois = set(handle_multiple_metadata(ids[0])['doi'])
     print(len(dois))

@@ -30,7 +30,7 @@ def retrieve_all_keywords(client, collection_name="MethodVectors"):
             collection_name=collection_name,
             #expr='',  # No filtering, query all records
             output_fields=["keywords"],  # Specify the field to retrieve
-            limit = 1000
+            limit = 10000
         )
 
         # Extract keywords and ensure uniqueness using a set
