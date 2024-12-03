@@ -160,29 +160,32 @@ def home_page():
                     stopped_at_abstract_by_doi = True
                     done_processing = False
                 else:
-                    progress_text.text('Generating answer...🚀')
+                    progress_text.text('Reranking relevant abstracts...🔄')
                     progress_bar.progress(55)
 
                 # #reranking
-                #reranked = reranking(text_input, abstract_by_doi_list[0])
+                reranked = reranking(text_input, abstract_by_doi_list[0])
+
+                progress_text.text('Generating answer...🚀')
+                progress_bar.progress(75)
 
                 #testing llm
                 output = llm_test(text_input)
 
-                #                           CHANGE THIS WHEN RERANKING DONE
-                final_form = abstract_by_doi_list[0]
+                #final list of dictionaries
+                final_form = reranked
 
                 #full text input for llm
                 #make abstracts in sequence
                 abstracts_in_sequence = ''
                 for a in final_form:
-                    abstracts_in_sequence += f'\n\n{a[0]}'
+                    abstracts_in_sequence += f'\n\n{a["abstract"]}'
 
                 #full text input
                 full_text_input = f'''Based on the following abstracts, {text_input} \n\n Abstracts: {abstracts_in_sequence}'''
 
-                # #full llm
-                #output = llm_test(full_text_input)
+                #full llm
+                output = llm_test(full_text_input)
 
             else:
                 #in case there are other types of errors
@@ -205,9 +208,9 @@ def home_page():
 
             for abs in final_form:
                 dictionary = {}
-                dictionary['title'] = abs[0].get('title')
-                dictionary['link'] = abs[0].get('full_text_link')
-                dictionary['date'] = abs[0].get('publication_date')
+                dictionary['title'] = abs.get('title')
+                dictionary['link'] = abs.get('link')
+                dictionary['date'] = abs.get('date')
                 abstracts_list.append(dictionary)
 
 

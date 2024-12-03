@@ -4,11 +4,15 @@ def reranking(user_input, metadata_list, n_results=5):
     model_name = "castorini/monot5-base-msmarco"
     tokenizer = T5Tokenizer.from_pretrained(model_name)  # Use T5Tokenizer here
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
-    
+
     # Rerank each document
     ranked_results = []
     for metadata in metadata_list:
         abstract = metadata[0].get('abstract', '')  # Extract abstract from metadata
+        title = metadata[0].get('title', '')  # Extract title from metadata
+        link = metadata[0].get('full_text_link', '')  # Extract link from metadata
+        date = metadata[0].get('publication_date', '')  # Extract date from metadata
+
         if not abstract:  # Skip if abstract is missing or empty
             continue
 
@@ -24,11 +28,17 @@ def reranking(user_input, metadata_list, n_results=5):
         # Decode the generated tokens to get relevance score or output
         relevance_score = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-        # Add abstract and relevance score to ranked results
-        ranked_results.append((abstract, relevance_score))
+        # Create a dictionary with all the metadata and relevance score
+        ranked_results.append({
+            'title': title,
+            'link': link,
+            'date': date,
+            'abstract': abstract,
+            'relevance_score': relevance_score
+        })
 
     # Sort documents by relevance score (numerical comparison may be necessary)
-    ranked_results = sorted(ranked_results, key=lambda x: x[1], reverse=True)
+    ranked_results = sorted(ranked_results, key=lambda x: x['relevance_score'], reverse=True)
 
     # Get the top 'n_results' best documents with their relevance score
     if n_results > len(ranked_results):
@@ -36,9 +46,4 @@ def reranking(user_input, metadata_list, n_results=5):
     else:
         top_ranked = ranked_results[:n_results - 1]
 
-    # Create a new metadata list with only the top n_results and their relevance score
-    final_metadata_list = []
-    for metadata, relevance_score in top_ranked:
-        metadata[0]['relevance_score'] = relevance_score  # Add relevance score to the metadata
-        final_metadata_list.append(metadata)
-    return final_metadata_list
+    return top_ranked

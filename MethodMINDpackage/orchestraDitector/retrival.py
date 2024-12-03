@@ -234,7 +234,7 @@ def get_abstract_by_doi(metadata_list):
         abstract_elems = root.findall(".//AbstractText")
         if abstract_elems:
             full_abstract = " ".join([elem.text for elem in abstract_elems if elem.text])
-            abstract_list.append(full_abstract)
+            metadata[0]['abstract'] = full_abstract
 
         else:
             metadata[0]['abstract'] = 'NR'  # If no abstract found
@@ -290,4 +290,3 @@ if __name__=='__main__':
     # print(get_abstract_by_doi([None]))
     # print(get_abstract_by_doi(['10.1007/s00296potatoe-011-2267-2']))
     print(get_abstract_by_doi(metadata_list = ids[0]))
-    
