@@ -1,13 +1,14 @@
+pytest
+pylint
+ipdb
 numpy
 pandas
 matplotlib
-seaborn
 scikit-learn
 huggingface-hub
 torch
 transformers
 google-generativeai
-python-dotenv
 streamlit
 transformers
 pymilvus

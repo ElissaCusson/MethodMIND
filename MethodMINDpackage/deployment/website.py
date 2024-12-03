@@ -128,7 +128,6 @@ def home_page():
                 progress_text.text('Searching for relevant abstracts...🔍')
                 progress_bar.progress(15)
 
-                # #hard coded
                 similarity = search_similarity(text_input, k = number_of_abstracts_to_search_similarity)
 
                 #verify similarity step
