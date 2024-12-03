@@ -48,9 +48,7 @@ if __name__=="__main__":
     dois = set(handle_multiple_metadata(ids[0])['doi'])
     print(len(dois))
     # # get_abstract_by_doi tests:
-    print(get_abstract_by_doi(dois= [None]))
-    print(get_abstract_by_doi(dois= ['10.1007/s00296potatoe-011-2267-2']))
-    abstracts = get_abstract_by_doi(dois= dois)[0]
+    abstracts = get_abstract_by_doi(ids[0])[0]
     # for abstract in abstracts:
     #     print(abstract)
     #     print('POTATOE')
