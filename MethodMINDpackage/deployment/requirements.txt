@@ -1,21 +1,3 @@
 #run pip install -r requirements-dev.txt
 git+https://github.com/ElissaCusson/MethodMIND
-pytest
-pylint
-ipdb
-jupyterlab
-jupyter
-numpy
-pandas
-matplotlib
-seaborn
-scikit-learn
-huggingface-hub
-torch
-transformers
-google-generativeai
-streamlit
-transformers
-pymilvus
-langchain-community
-sentencepiece
+
