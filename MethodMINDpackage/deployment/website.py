@@ -129,7 +129,7 @@ def home_page():
                 progress_bar.progress(15)
 
                 # #hard coded
-                similarity = search_similarity(text_input, k = 3)
+                similarity = search_similarity(text_input, k = 30)
 
                 #verify similarity step
                 if similarity[1] is False:
@@ -164,7 +164,7 @@ def home_page():
                     progress_bar.progress(55)
 
                 # #reranking
-                reranked = reranking(text_input, abstract_by_doi_list[0])
+                reranked = reranking(text_input, abstract_by_doi_list[0], n_results=number_of_abstracts)
 
                 progress_text.text('Generating answer...🚀')
                 progress_bar.progress(75)
