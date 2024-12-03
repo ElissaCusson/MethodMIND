@@ -89,6 +89,7 @@ def test_embedding(query):
     return embedding
 
 def search_similarity(query, k=3):
+    """Takes raw text (base query) and returns a nested list [data: ["['id: ..., distance: ..., entity: {}', ...]], True]"""
     if query is None or not query.strip():
         return [None, False, "Query is required."]
     # client=connectDB()
@@ -150,7 +151,7 @@ def query_by_id_client(query_id=None):
 
 def query_by_id(set_query_ids=None):
     """
-    Retrieve metadata for a specific ID from the collection.
+    Retrieve metadata for a list of IDs from the collection.
 
     Args:
         set_query_ids: A set of the ID to search for.
@@ -248,7 +249,7 @@ def handle_multiple_similarities(best_matches):
 def handle_multiple_metadata(list_metadata):
     """ Gets a list of metadata and returns a dict with the metadata grouped by category"""
     ordered_metadata = defaultdict(list)
-    for i, metadata in enumerate(list_metadata):
+    for metadata in list_metadata:
         ordered_metadata['id'].append(metadata[0]['id'])
         ordered_metadata['title'].append(metadata[0]['title'])
         ordered_metadata['doi'].append(metadata[0]['doi'])

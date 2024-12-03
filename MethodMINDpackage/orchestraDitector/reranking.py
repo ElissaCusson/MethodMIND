@@ -1,4 +1,6 @@
+
 from transformers import T5Tokenizer, AutoModelForSeq2SeqLM
+
 
 def reranking(user_input, metadata_list, n_results=5):
     model_name = "castorini/monot5-base-msmarco"
@@ -39,7 +41,6 @@ def reranking(user_input, metadata_list, n_results=5):
 
     # Sort documents by relevance score (numerical comparison may be necessary)
     ranked_results = sorted(ranked_results, key=lambda x: x['relevance_score'], reverse=True)
-
     # Get the top 'n_results' best documents with their relevance score
     if n_results > len(ranked_results):
         top_ranked = ranked_results
@@ -47,3 +48,32 @@ def reranking(user_input, metadata_list, n_results=5):
         top_ranked = ranked_results[:n_results - 1]
 
     return top_ranked
+
+if __name__=="__main__":
+    pass
+    ########### MVP TEST
+    # user_query = ''
+    # user_query = "Which methods can I use to measure tremor decrease and gait improvement in Parkinson patients receiving deep brain stimulation?"
+
+    # ###############
+
+    # # # Display the most similar document
+    # similarity = search_similarity(user_query, k=10)
+    # print(similarity)
+
+    # # Multiple similarity test:
+    # multiple_similarities = handle_multiple_similarities(similarity[0][0])
+    # # print(multiple_similarities)
+
+    # # # query by id tests:
+    # ids=query_by_id(set_query_ids=multiple_similarities)
+    # # print(ids)
+
+    # dois = set(handle_multiple_metadata(ids[0])['doi'])
+    # print(len(dois))
+    # # # get_abstract_by_doi tests:
+    # abstracts = get_abstract_by_doi(ids[0])[0]
+    # # for abstract in abstracts:
+    # #     print(abstract)
+    # #     print('POTATOE')
+    # print(reranking(user_query, abstracts))
