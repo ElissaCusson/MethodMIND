@@ -104,18 +104,6 @@ def home_page():
     #loading spinner
     if st.button('Submit'):
 
-
-
-#############################################################################################################
-        # #hard coded
-#        similarity = search_similarity(text_input)
- #       ids = handle_multiple_similarities(similarity[0][0])
-  #      metadata_list = query_by_id(ids)
-   #     metadata_dict = handle_multiple_metadata(metadata_list[0])
-    #    dois = set(metadata_dict['doi'])
-     #   abstract_by_doi = get_abstract_by_doi(dois= dois)[0]                              #####
-#############################################################################################################
-
         with st.spinner('Processing... Please wait'):
 
             #loading progress
@@ -141,7 +129,7 @@ def home_page():
                 progress_bar.progress(15)
 
                 # #hard coded
-                similarity = search_similarity(text_input)
+                similarity = search_similarity(text_input, k = 3)
 
                 #verify similarity step
                 if similarity[1] is False:
@@ -165,9 +153,7 @@ def home_page():
                     progress_text.text('Retrieving abstracts...🛒')
                     progress_bar.progress(40)
 
-                st.write(metadata_list)
                 abstract_by_doi_list = get_abstract_by_doi(metadata_list[0])
-                st.write(abstract_by_doi_list)
 
                 #verify abstract by doi step
                 if abstract_by_doi_list[1] is False:
@@ -177,17 +163,23 @@ def home_page():
                     progress_text.text('Generating answer...🚀')
                     progress_bar.progress(55)
 
-                #reranking
-                reranked = reranking(text_input, abstract_by_doi_list[0])
-                st.write(reranked)
+                # #reranking
+                # reranked = reranking(text_input, abstract_by_doi_list[0])
 
                 #testing llm
                 output = llm_test(text_input)
 
-                #full text input for llm
+                #                           CHANGE THIS WHEN RERANKING DONE
+                final_form = abstract_by_doi_list[0]
 
-                                                ## put abstracts in sequence!
-                full_text_input = f'''Based on the following abstracts, {text_input} \n\n Abstracts: \n {abstract_by_doi}'''
+                #full text input for llm
+                #make abstracts in sequence
+                abstracts_in_sequence = ''
+                for a in final_form:
+                    abstracts_in_sequence += f'\n\n{a[0]}'
+
+                #full text input
+                full_text_input = f'''Based on the following abstracts, {text_input} \n\n Abstracts: {abstracts_in_sequence}'''
 
                 # #full llm
                 #output = llm_test(full_text_input)
@@ -208,70 +200,31 @@ def home_page():
             #results output
             st.markdown(f"""<div style="border: 2px solid #4CAF50; padding: 10px; border-radius: 5px;">{output}</div>""", unsafe_allow_html=True)
 
-
-
-
-
-
-
-
-
-            #abstracts output
-            def remove_duplicates_preserving_order(iterable):
-                seen = set()
-                return [item for item in iterable if not (item in seen or seen.add(item))]
-
-            # Remove duplicates while preserving order
-            # abstract_title = remove_duplicates_preserving_order(metadata_dict['title'])
-            # full_text_link = remove_duplicates_preserving_order(metadata_dict['full_text_link'])
-            # publication_date = remove_duplicates_preserving_order(metadata_dict['publication_date'])
-
             # For multiple abstracts
-            # abstracts_list = []
+            abstracts_list = []
 
-            # # Checking for length
-            # if len(abstract_title) == len(full_text_link) and len(abstract_title) == len(publication_date):
-            #     # Creating abstracts_list using zip
-            #     for title, link, date in zip(abstract_title, full_text_link, publication_date):
-            #         metadata = {}
-            #         metadata['title'] = title
-            #         metadata['link'] = link
-            #         metadata['date'] = date
-            #         abstracts_list.append(metadata)
-            # else:
-            #     st.subheader('Check this through')
-
-            # # Generate the HTML for multiple abstracts
-            # abstracts = ""
-            # for abstract in abstracts_list:
-            #     abstracts += f'''
-            #                 {abstract["title"]}:
-            #                 <a href="{abstract["link"]}" target="_blank" style="color: yellow;">{abstract["link"]}</a><br><br>
-            #             '''
+            for abs in final_form:
+                dictionary = {}
+                dictionary['title'] = abs[0].get('title')
+                dictionary['link'] = abs[0].get('full_text_link')
+                dictionary['date'] = abs[0].get('publication_date')
+                abstracts_list.append(dictionary)
 
 
-
-
-
-
-
-
-
-
-
-
-
-            # #FOR 1 ABSTRACT!
-            # abstracts = f'''
-            #     {abstract_title}:
-            #     <a href="{full_text_link}" target="_blank" style="color: yellow;">{full_text_link}</a><br><br>
-            # '''
+            # Generate the HTML for multiple abstracts
+            abstracts_html = "".join([
+                f'''<strong>{abstract["title"]}</strong>
+                <span style="font-style: italic; color: #aaa;">({abstract["date"]})</span>:
+                <a href="{abstract["link"]}" target="_blank" style="color: yellow; text-decoration: none; word-wrap: break-word;">{abstract["link"]}</a>
+                <br><br>'''
+                for abstract in abstracts_list
+            ])
 
             st.write('###')
 
             #displaying abstracts
             st.markdown('### Abstracts:')
-            # st.markdown(f"""<div style="border: 2px solid white; padding: 10px; border-radius: 5px;">{abstracts}</div>""", unsafe_allow_html=True)
+            st.markdown(f"""<div style="border: 2px solid white; padding: 10px; border-radius: 5px;">{abstracts_html}</div>""", unsafe_allow_html=True)
 
         #if request is outside of scope
         elif stopped_by_firewall:
@@ -286,8 +239,8 @@ def home_page():
             st.subheader(metadata_list[2])
 
         #if stopped at abstract by doi
-        # elif stopped_at_abstract_by_doi:
-        #     st.subheader(abstract_by_doi[2])
+        elif stopped_at_abstract_by_doi:
+            st.subheader('stopped at abstract_by_doi')
 
     #disclaimer
     #st.caption('MethodMIND can make mistakes. Please check important information')
