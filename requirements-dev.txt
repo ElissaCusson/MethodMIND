@@ -13,7 +13,6 @@ huggingface-hub
 torch
 transformers
 google-generativeai
-python-dotenv
 streamlit
 transformers
 pymilvus
