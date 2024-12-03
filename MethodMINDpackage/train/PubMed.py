@@ -4,13 +4,13 @@ import pandas as pd
 from MethodMINDpackage.params import *
 
 def get_pubmed_data():
-    '''This function calls the PubMed API and returns abstracts, metadata, and full-text links in a DataFrame'''
+    """This function calls the PubMed API and returns abstracts, metadata, and full-text links in a DataFrame."""
 
     # Step 1: Search for articles using ESearch
     search_params = {
         "db": "pubmed",
         "term": PUBMED_SEARCH_STRATEGY_2021_to_2024,
-        "retmax": 9999,  # Number of results to retrieve
+        "retmax": 5,  # Number of results to retrieve
         "retmode": "json",
         "api_key": PUBMED_API_KEY
     }
@@ -18,7 +18,7 @@ def get_pubmed_data():
     search_response = requests.get(esearch_url, params=search_params)
 
     # Parse the article IDs
-    article_ids = search_response.json()["esearchresult"]["idlist"]
+    article_ids = search_response.json().get("esearchresult", {}).get("idlist", [])
     if not article_ids:
         print("No article IDs found. Check your search parameters.")
         return pd.DataFrame()
@@ -41,68 +41,72 @@ def get_pubmed_data():
         efetch_url = f"{PUBMED_BASE_URL}efetch.fcgi"
         fetch_response = requests.get(efetch_url, params=efetch_params)
 
-        # Log the response content
-        print(f"Response from PubMed EFetch (Batch {i // batch_size + 1}): {fetch_response.text[:500]}")  # Show first 500 characters of the response
-
         # Validate the response content
         if not fetch_response.content.strip():
-            print("Empty response received from PubMed EFetch for this batch.")
-            continue  # Skip this batch and proceed to the next one
+            print(f"Empty response received from PubMed EFetch for batch {i // batch_size + 1}.")
+            continue
 
         try:
             # Parse the XML response
             root = ET.fromstring(fetch_response.content)
         except ET.ParseError as e:
-            print(f"XML Parse Error in batch {i // batch_size + 1}: {e}. Response: {fetch_response.content}")
-            continue  # Skip this batch and proceed to the next one
+            print(f"XML Parse Error in batch {i // batch_size + 1}: {e}")
+            continue
 
         # Extract Title, Abstract, DOI, Keywords, Publication Date, and Full-Text Link
         for article in root.findall(".//PubmedArticle"):
-            title = article.find(".//ArticleTitle").text
-            abstract = article.find(".//AbstractText")
-            doi = None
-            full_text_link = None
+            title = article.find(".//ArticleTitle")
+            title_text = title.text if title is not None else "NR"
+
+            # Extract the abstract
+            abstract_elems = article.findall(".//AbstractText")
+            abstract = " ".join([elem.text.strip() for elem in abstract_elems if elem.text]) if abstract_elems else "NR"
 
             # Extract DOI and Full-Text Link
+            doi = None
+            full_text_link = None
             for id_elem in article.findall(".//ArticleId"):
                 if id_elem.get("IdType") == "doi":
                     doi = id_elem.text
-                    full_text_link = f"https://doi.org/{doi}"  # Construct full-text link from DOI
+                    full_text_link = f"https://doi.org/{doi}" if doi else "NR"
 
             # Extract keywords
-            keywords = [kw.text for kw in article.findall(".//Keyword") if kw.text is not None]
+            keywords = [kw.text for kw in article.findall(".//Keyword") if kw.text]
 
             # Extract publication date
-            date_elem = article.find(".//DateCompleted")  # Prefer DateCompleted if available
-            if date_elem is None:
-                date_elem = article.find(".//ArticleDate")  # Use ArticleDate as a fallback
-
+            date_elem = article.find(".//DateCompleted") or article.find(".//ArticleDate")
             if date_elem is not None:
-                pub_date = "-".join([
-                    date_elem.find("Year").text,
-                    date_elem.find("Month").text.zfill(2),  # Ensure two-digit month
-                    date_elem.find("Day").text.zfill(2)  # Ensure two-digit day
-                ])
+                year = date_elem.find("Year").text if date_elem.find("Year") is not None else "NR"
+                month = date_elem.find("Month").text.zfill(2) if date_elem.find("Month") is not None else "NR"
+                day = date_elem.find("Day").text.zfill(2) if date_elem.find("Day") is not None else "NR"
+                pub_date = f"{year}-{month}-{day}"
             else:
-                pub_date = None
+                pub_date = "NR"
 
             # Only add articles with a non-null Abstract and DOI
-            if abstract is not None and doi is not None:
+            if abstract != "NR" and doi is not None:
                 data.append({
-                    "Title": title if title is not None else "NR",
-                    "Abstract": abstract.text,
+                    "Title": title_text,
+                    "Abstract": abstract,
                     "DOI": doi,
-                    "Full Text Link": full_text_link if full_text_link is not None else "NR",
+                    "Full Text Link": full_text_link,
                     "Keywords": ", ".join(keywords) if keywords else "NR",
-                    "Publication Date": pub_date if pub_date is not None else "NR"
+                    "Publication Date": pub_date
                 })
 
     # Create a DataFrame from the collected data
     df = pd.DataFrame(data)
-
+    print(f"Successfully fetched {len(df)} articles.")
     return df
+
 
 if __name__=='__main__':
     pass
     # # Test the function
-    # print(get_pubmed_data())
+    # Set display options to avoid truncation
+    #pd.set_option('display.max_colwidth', None)  # Allows full content in cells
+    #pd.set_option('display.max_rows', None)     # Ensures all rows are shown
+
+    # Assuming get_pubmed_data() returns a DataFrame
+    #data = get_pubmed_data()
+    #print(data['Abstract'])  # View the Abstract column
