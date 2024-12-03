@@ -6,7 +6,7 @@ with open("requirements-dev.txt") as f:
 requirements = [x.strip() for x in content if "git+" not in x]
 
 setup(name='MethodMIND',
-      version="0.0.2",
+      version="0.0.3",
       description="MethodMIND package",
       license="MIT",
     #   author="Le Wagon",
