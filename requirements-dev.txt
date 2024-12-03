@@ -20,3 +20,4 @@ transformers
 pymilvus
 langchain-community
 langchain-milvus
+sentencepiece

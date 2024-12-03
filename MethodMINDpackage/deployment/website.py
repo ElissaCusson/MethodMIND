@@ -3,6 +3,7 @@ from PIL import Image
 from MethodMINDpackage.orchestraDitector.LLM import llm_test
 from MethodMINDpackage.orchestraDitector.retrival import search_similarity, query_by_id, get_abstract_by_doi, handle_multiple_similarities, handle_multiple_metadata
 from MethodMINDpackage.deployment.firewall import firewall_all_keywords
+from MethodMINDpackage.orchestraDitector.reranking import reranking
 
 st.set_page_config(layout="wide")
 
@@ -11,6 +12,7 @@ st.set_page_config(layout="wide")
 #code for number of abstracts
 #add emoji/gif while loading
 #explain how it works
+#remove duplicates /set
 
 
 #                                                   HOME
@@ -102,18 +104,6 @@ def home_page():
     #loading spinner
     if st.button('Submit'):
 
-
-
-#############################################################################################################
-        # #hard coded
-#        similarity = search_similarity(text_input)
- #       ids = handle_multiple_similarities(similarity[0][0])
-  #      metadata_list = query_by_id(ids)
-   #     metadata_dict = handle_multiple_metadata(metadata_list[0])
-    #    dois = set(metadata_dict['doi'])
-     #   abstract_by_doi = get_abstract_by_doi(dois= dois)[0]                              #####
-#############################################################################################################
-
         with st.spinner('Processing... Please wait'):
 
             #loading progress
@@ -139,48 +129,57 @@ def home_page():
                 progress_bar.progress(15)
 
                 # #hard coded
-                similarity = search_similarity(text_input)
+                similarity = search_similarity(text_input, k = 3)
 
                 #verify similarity step
                 if similarity[1] is False:
                     stopped_at_similarity = True
                     done_processing = False
-                    id = 0
+                    ids = 0
                 else:
-                    id = similarity[0][0][0].id
+                    ids = handle_multiple_similarities(similarity[0][0])
 
-                progress_text.text('Fetching DOI information...🎣')
-                progress_bar.progress(25)
+                    progress_text.text('Fetching DOI information...🎣')
+                    progress_bar.progress(25)
 
                 #important data here
-                doi_from_ID = query_by_id(id)
+                metadata_list = query_by_id(ids)
 
                 #verify query by id step
-                if doi_from_ID[1] is False:
+                if metadata_list[1] is False:
                     stopped_at_query_by_id = True
                     done_processing = False
-                    doi = ''
                 else:
-                    doi = doi_from_ID[0][0]['doi']
+                    progress_text.text('Retrieving abstracts...🛒')
+                    progress_bar.progress(40)
 
-                progress_text.text('Retrieving abstracts...🛒')
-                progress_bar.progress(40)
-
-                abstract_by_doi = get_abstract_by_doi(doi= doi)[0]
+                abstract_by_doi_list = get_abstract_by_doi(metadata_list[0])
 
                 #verify abstract by doi step
-                if abstract_by_doi[1] is False:
+                if abstract_by_doi_list[1] is False:
                     stopped_at_abstract_by_doi = True
                     done_processing = False
+                else:
+                    progress_text.text('Generating answer...🚀')
+                    progress_bar.progress(55)
 
-                progress_text.text('Generating answer...🚀')
-                progress_bar.progress(55)
+                # #reranking
+                #reranked = reranking(text_input, abstract_by_doi_list[0])
 
                 #testing llm
                 output = llm_test(text_input)
 
+                #                           CHANGE THIS WHEN RERANKING DONE
+                final_form = abstract_by_doi_list[0]
+
                 #full text input for llm
-                full_text_input = f'''Based on the following abstracts, {text_input} \n\n Abstracts: \n {abstract_by_doi}'''
+                #make abstracts in sequence
+                abstracts_in_sequence = ''
+                for a in final_form:
+                    abstracts_in_sequence += f'\n\n{a[0]}'
+
+                #full text input
+                full_text_input = f'''Based on the following abstracts, {text_input} \n\n Abstracts: {abstracts_in_sequence}'''
 
                 # #full llm
                 #output = llm_test(full_text_input)
@@ -189,46 +188,43 @@ def home_page():
                 #in case there are other types of errors
                 stopped_by_firewall = True
 
-            progress_text.text('Done ✅')
+
             progress_bar.progress(100)
 
         #                                               OUTPUT
 
         if done_processing:
+
+            progress_text.text('Done ✅')
+
             #results output
             st.markdown(f"""<div style="border: 2px solid #4CAF50; padding: 10px; border-radius: 5px;">{output}</div>""", unsafe_allow_html=True)
 
+            # For multiple abstracts
+            abstracts_list = []
 
-            #abstracts output
-            abstract_title = doi_from_ID[0][0]['title']
-            full_text_link = doi_from_ID[0][0]['full_text_link']
+            for abs in final_form:
+                dictionary = {}
+                dictionary['title'] = abs[0].get('title')
+                dictionary['link'] = abs[0].get('full_text_link')
+                dictionary['date'] = abs[0].get('publication_date')
+                abstracts_list.append(dictionary)
 
-            #FOR MULTIPLE ABSTRACTS
-            abstracts_list = [
-                {"title": "Abstract 1", "link": "https://example.com/1"},
-                {"title": "Abstract 2", "link": "https://example.com/2"},
-                {"title": "Abstract 3", "link": "https://example.com/3"},
-            ]
 
             # Generate the HTML for multiple abstracts
-            abstracts = ""
-            for abstract in abstracts_list:
-                abstracts += f'''
-                            {abstract["title"]}:
-                            <a href="{abstract["link"]}" target="_blank" style="color: yellow;">{abstract["link"]}</a><br><br>
-                        '''
-
-            #FOR 1 ABSTRACT!
-            abstracts = f'''
-                {abstract_title}:
-                <a href="{full_text_link}" target="_blank" style="color: yellow;">{full_text_link}</a><br><br>
-            '''
+            abstracts_html = "".join([
+                f'''<strong>{abstract["title"]}</strong>
+                <span style="font-style: italic; color: #aaa;">({abstract["date"]})</span>:
+                <a href="{abstract["link"]}" target="_blank" style="color: yellow; text-decoration: none; word-wrap: break-word;">{abstract["link"]}</a>
+                <br><br>'''
+                for abstract in abstracts_list
+            ])
 
             st.write('###')
 
             #displaying abstracts
             st.markdown('### Abstracts:')
-            st.markdown(f"""<div style="border: 2px solid white; padding: 10px; border-radius: 5px;">{abstracts}</div>""", unsafe_allow_html=True)
+            st.markdown(f"""<div style="border: 2px solid white; padding: 10px; border-radius: 5px;">{abstracts_html}</div>""", unsafe_allow_html=True)
 
         #if request is outside of scope
         elif stopped_by_firewall:
@@ -240,11 +236,11 @@ def home_page():
 
         #if stopped at query by id step
         elif stopped_at_query_by_id:
-            st.subheader(doi_from_ID[2])
+            st.subheader(metadata_list[2])
 
         #if stopped at abstract by doi
         elif stopped_at_abstract_by_doi:
-            st.subheader(abstract_by_doi[2])
+            st.subheader('stopped at abstract_by_doi')
 
     #disclaimer
     #st.caption('MethodMIND can make mistakes. Please check important information')

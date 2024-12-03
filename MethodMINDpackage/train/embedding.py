@@ -1,7 +1,7 @@
 from transformers import AutoModel, AutoTokenizer
 import torch
 from chunking import chunking
-from PubMed import get_pubmed_data
+from PubMed import get_pubmed_data, get_pubmed_data_by_year
 from pymilvus import MilvusClient
 from MethodMINDpackage.params import *
 
@@ -76,7 +76,8 @@ def store_chunk_embeddings(client, collection_name):
     return embedded_chunks_with_metadata
 
 def store_abstracts_embeddings(client, collection_name):
-    df = get_pubmed_data()
+    # all 3 get pubmed data
+    df = get_pubmed_data(PUBMED_SEARCH_STRATEGY_2014_to_2017)
     # Filter out rows where Abstract is None or empty
     df = df[df['Abstract'].notna() & (df['Abstract'].str.strip() != '')]
 
@@ -108,7 +109,7 @@ if __name__=='__main__':
     #pass
     # Store embeddings in Milvus
     #store_chunk_embeddings(client, collection_name) # chunk embeddings
-    #store_abstracts_embeddings(client, collection_name) # abstract embeddings
+    store_abstracts_embeddings(client, collection_name) # abstract embeddings
 
     row_count = client.get_collection_stats(collection_name=collection_name)['row_count']
     print(f"\n {database_name} database as {row_count} in collection {collection_name}")
