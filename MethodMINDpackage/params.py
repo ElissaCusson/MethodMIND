@@ -8,8 +8,8 @@ PUBMED_SEARCH_STRATEGY_2018_to_2020 = os.environ.get("PUBMED_SEARCH_STRATEGY_201
 PUBMED_SEARCH_STRATEGY_2021_to_2024 = os.environ.get("PUBMED_SEARCH_STRATEGY_2021_to_2024")
 
 # Database parameters
-#DIRENV_DIR = os.environ.get("DIRENV_DIR")
-#DATA_DIRECTORY = f"{DIRENV_DIR[1:]}/data" #the slice is for removing the first dash
-#DATABASE_PATH = f"{DIRENV_DIR[1:]}/data/MethodMIND.db"
+DIRENV_DIR = os.environ.get("DIRENV_DIR")
+DATA_DIRECTORY = f"{DIRENV_DIR[1:]}/data" #the slice is for removing the first dash
+DATABASE_PATH = f"{DIRENV_DIR[1:]}/data/MethodMIND.db"
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
