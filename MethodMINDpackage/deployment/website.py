@@ -7,6 +7,8 @@ from MethodMINDpackage.orchestraDitector.reranking import reranking
 
 st.set_page_config(layout="wide")
 
+number_of_abstracts_to_search_similarity = 30
+
 #                                                  TO DO
 
 #code for number of abstracts
@@ -129,7 +131,8 @@ def home_page():
                 progress_bar.progress(15)
 
                 # #hard coded
-                similarity = search_similarity(text_input, k = 30)
+
+                similarity = search_similarity(text_input, k = number_of_abstracts_to_search_similarity)
 
                 #verify similarity step
                 if similarity[1] is False:
@@ -164,7 +167,7 @@ def home_page():
                     progress_bar.progress(55)
 
                 # #reranking
-                reranked = reranking(text_input, abstract_by_doi_list[0], n_results=number_of_abstracts)
+                reranked = reranking(text_input, abstract_by_doi_list[0], number_of_abstracts)
 
                 progress_text.text('Generating answer...🚀')
                 progress_bar.progress(75)
