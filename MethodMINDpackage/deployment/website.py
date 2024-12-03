@@ -12,6 +12,7 @@ st.set_page_config(layout="wide")
 #code for number of abstracts
 #add emoji/gif while loading
 #explain how it works
+#remove duplicates /set
 
 
 #                                                   HOME
@@ -164,7 +165,9 @@ def home_page():
                     progress_text.text('Retrieving abstracts...🛒')
                     progress_bar.progress(40)
 
-                abstract_by_doi_list = get_abstract_by_doi(metadata_list)[0]
+                st.write(metadata_list)
+                abstract_by_doi_list = get_abstract_by_doi(metadata_list[0])
+                st.write(abstract_by_doi_list)
 
                 #verify abstract by doi step
                 if abstract_by_doi_list[1] is False:
@@ -175,7 +178,7 @@ def home_page():
                     progress_bar.progress(55)
 
                 #reranking
-                reranked = reranking(text_input, abstract_by_doi_list)
+                reranked = reranking(text_input, abstract_by_doi_list[0])
                 st.write(reranked)
 
                 #testing llm

@@ -194,9 +194,9 @@ def query_by_id(set_query_ids=None):
 def get_abstract_by_doi(metadata_list):
     api_key = PUBMED_API_KEY  # Ensure you have your API key available
     for metadata in metadata_list:
-        doi = metadata.get('doi')  # Get the DOI from the metadata dictionary
+        doi = metadata[0].get('doi')  # Get the DOI from the metadata dictionary
         if doi is None:
-            metadata['abstract'] = None
+            metadata[0]['abstract'] = None
             continue
 
         # Step 1: Search for the article using ESearch to get the PubMed ID (PMID) from the DOI
@@ -212,7 +212,7 @@ def get_abstract_by_doi(metadata_list):
 
         # Check if a PMID was found for the DOI
         if "idlist" not in search_data["esearchresult"] or not search_data["esearchresult"]["idlist"]:
-            metadata['abstract'] = 'NR'  # No record found
+            metadata[0]['abstract'] = 'NR'  # No record found
             continue
 
         pmid = search_data["esearchresult"]["idlist"][0]  # Get the first PMID
@@ -233,9 +233,9 @@ def get_abstract_by_doi(metadata_list):
         # Extract the abstract
         abstract_elem = root.find(".//AbstractText")
         if abstract_elem is not None:
-            metadata['abstract'] = abstract_elem.text  # Add abstract to the metadata dictionary
+            metadata[0]['abstract'] = abstract_elem.text  # Add abstract to the metadata dictionary
         else:
-            metadata['abstract'] = 'NR'  # If no abstract found
+            metadata[0]['abstract'] = 'NR'  # If no abstract found
 
     return [metadata_list, True]  # Return the modified list of metadata dictionaries
 
@@ -282,9 +282,9 @@ if __name__=='__main__':
     ids=query_by_id(set_query_ids=multiple_similarities)
     print(ids)
 
-    dois = set(handle_multiple_metadata(ids[0])['doi'])
-    print(len(dois))
-    # # get_abstract_by_doi tests:
-    print(get_abstract_by_doi(dois= [None]))
-    print(get_abstract_by_doi(dois= ['10.1007/s00296potatoe-011-2267-2']))
-    print(get_abstract_by_doi(dois= dois))
+    # dois = set(handle_multiple_metadata(ids[0])['doi'])
+    # print(len(dois))
+    # # # get_abstract_by_doi tests:
+    # print(get_abstract_by_doi([None]))
+    # print(get_abstract_by_doi(['10.1007/s00296potatoe-011-2267-2']))
+    print(get_abstract_by_doi(metadata_list = ids[0]))
