@@ -164,7 +164,7 @@ def home_page():
                     progress_bar.progress(55)
 
                 # #reranking
-                # reranked = reranking(text_input, abstract_by_doi_list[0])
+                #reranked = reranking(text_input, abstract_by_doi_list[0])
 
                 #testing llm
                 output = llm_test(text_input)

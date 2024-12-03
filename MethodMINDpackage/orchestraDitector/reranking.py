@@ -31,7 +31,10 @@ def reranking(user_input, metadata_list, n_results=5):
     ranked_results = sorted(ranked_results, key=lambda x: x[1], reverse=True)
 
     # Get the top 'n_results' best documents with their relevance score
-    top_ranked = ranked_results[:n_results]
+    if n_results > len(ranked_results):
+        top_ranked = ranked_results
+    else:
+        top_ranked = ranked_results[:n_results - 1]
 
     # Create a new metadata list with only the top n_results and their relevance score
     final_metadata_list = []
