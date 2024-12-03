@@ -43,8 +43,6 @@ def retrieve_all_keywords(client, collection_name="MethodVectors"):
 
 
 
-firewall_all_keywords('')
-
 #{'Parkinson’s disease, anhedonia, levodopa dosage, mortality, predictive factors', 'Acute encephalitis syndrome (AES),
 # anti-NMDAR encephalitis, autoimmune encephalitis, children, immune mediated encephalitis, viral encephalitis', 'Craniotomy,
 # Intracranial bleeding, Neurosurgery, Outcome, Traumatic brain injury', 'fat deposition heterogeneity, insulin resistance,
