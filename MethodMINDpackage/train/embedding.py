@@ -1,5 +1,7 @@
 from transformers import AutoModel, AutoTokenizer
 import torch
+import re
+import string
 from chunking import chunking
 from PubMed import get_pubmed_data, get_pubmed_data_by_year
 from pymilvus import MilvusClient
@@ -12,7 +14,13 @@ model = AutoModel.from_pretrained(model_name)
 
 def embed_text(text):
     '''This function vectorizes text using the preloaded SciBERT model.'''
-    # Tokenize the input text
+     # Convert to lowercase
+    text = text.lower()
+
+    # Remove punctuation and special characters
+    text = re.sub(f"[{string.punctuation}]", "", text)
+
+    # Tokenize the cleaned text
     inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
 
     # Pass through the model
