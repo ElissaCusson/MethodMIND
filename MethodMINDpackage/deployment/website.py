@@ -1,7 +1,7 @@
 import streamlit as st
 from PIL import Image
 from MethodMINDpackage.orchestraDitector.LLM import llm_test
-from MethodMINDpackage.orchestraDitector.retrival import search_similarity, query_by_id, get_abstract_by_doi, handle_multiple_similarities, handle_multiple_metadata
+from MethodMINDpackage.orchestraDitector.retrival import user_input_enhancing, search_similarity, query_by_id, get_abstract_by_doi, handle_multiple_similarities, handle_multiple_metadata
 from MethodMINDpackage.deployment.firewall import firewall_all_keywords
 from MethodMINDpackage.orchestraDitector.reranking import reranking
 
@@ -86,7 +86,7 @@ def home_page():
 
     # Second column with a container and border
     with columns[1]:
-        st.markdown('<div class="container-border">Which methods can I use to measure migraine pain intensity?</div>', unsafe_allow_html=True)
+        st.markdown('<div class="container-border">Which methods can I use to measure migraine intensity?</div>', unsafe_allow_html=True)
 
     #space
     st.write('###')
@@ -129,7 +129,8 @@ def home_page():
                 progress_bar.progress(15)
 
                 # #hard coded
-                similarity = search_similarity(text_input, k = 30)
+                text_enhanced = user_input_enhancing(text_input)
+                similarity = search_similarity( text_enhanced, k = 30)
 
                 #verify similarity step
                 if similarity[1] is False:

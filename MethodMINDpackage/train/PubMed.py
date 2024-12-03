@@ -9,7 +9,7 @@ def get_pubmed_data_by_year():
     df3 = get_pubmed_data(PUBMED_SEARCH_STRATEGY_2021_to_2024)
     return  pd.concat([df1, df2, df3], ignore_index=True)
 
-def get_pubmed_data(search_strategy = PUBMED_SEARCH_STRATEGY_2014_to_2017):
+def get_pubmed_data(search_strategy = PUBMED_SEARCH_STRATEGY_2021_to_2024):
     """This function calls the PubMed API and returns abstracts, metadata, and full-text links in a DataFrame."""
 
     # Step 1: Search for articles using ESearch

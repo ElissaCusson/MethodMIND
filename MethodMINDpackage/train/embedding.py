@@ -75,7 +75,7 @@ def store_chunk_embeddings(client, collection_name):
 
 def store_abstracts_embeddings(client, collection_name):
     # all 3 get pubmed data
-    df = get_pubmed_data(PUBMED_SEARCH_STRATEGY_2014_to_2017)
+    df = get_pubmed_data_by_year()
     # Filter out rows where Abstract is None or empty
     df = df[df['Abstract'].notna() & (df['Abstract'].str.strip() != '')]
 
