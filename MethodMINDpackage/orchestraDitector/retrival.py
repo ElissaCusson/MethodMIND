@@ -231,9 +231,11 @@ def get_abstract_by_doi(metadata_list):
         root = ET.fromstring(fetch_response.content)
 
         # Extract the abstract
-        abstract_elem = root.find(".//AbstractText")
-        if abstract_elem is not None:
-            metadata[0]['abstract'] = abstract_elem.text  # Add abstract to the metadata dictionary
+        abstract_elems = root.findall(".//AbstractText")
+        if abstract_elems:
+            full_abstract = " ".join([elem.text for elem in abstract_elems if elem.text])
+            abstract_list.append(full_abstract)
+
         else:
             metadata[0]['abstract'] = 'NR'  # If no abstract found
 
@@ -265,14 +267,14 @@ if __name__=='__main__':
     # embedded_query = user_input_enhancing(user_query)
 
     ########### MVP TEST
-    user_query = ''
+    #user_query = ''
     user_query = "Which methods can I use to measure tremor decrease and gait improvement in Parkinson patients receiving deep brain stimulation?"
 
     ###############
 
     # # Display the most similar document
     similarity = search_similarity(user_query, k=10)
-    # print(similarity)
+    print(similarity)
 
     # Multiple similarity test:
     multiple_similarities = handle_multiple_similarities(similarity[0][0])
@@ -288,3 +290,4 @@ if __name__=='__main__':
     # print(get_abstract_by_doi([None]))
     # print(get_abstract_by_doi(['10.1007/s00296potatoe-011-2267-2']))
     print(get_abstract_by_doi(metadata_list = ids[0]))
+    

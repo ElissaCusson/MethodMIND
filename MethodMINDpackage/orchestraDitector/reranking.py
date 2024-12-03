@@ -4,7 +4,7 @@ def reranking(user_input, metadata_list, n_results=5):
     model_name = "castorini/monot5-base-msmarco"
     tokenizer = T5Tokenizer.from_pretrained(model_name)  # Use T5Tokenizer here
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
-
+    
     # Rerank each document
     ranked_results = []
     for metadata in metadata_list:
@@ -41,5 +41,4 @@ def reranking(user_input, metadata_list, n_results=5):
     for metadata, relevance_score in top_ranked:
         metadata[0]['relevance_score'] = relevance_score  # Add relevance score to the metadata
         final_metadata_list.append(metadata)
-
     return final_metadata_list
