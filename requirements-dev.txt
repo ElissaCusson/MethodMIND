@@ -9,7 +9,6 @@ pandas
 matplotlib
 seaborn
 scikit-learn
-llama_cpp_python
 huggingface-hub
 torch
 transformers
@@ -19,5 +18,4 @@ streamlit
 transformers
 pymilvus
 langchain-community
-langchain-milvus
 sentencepiece
