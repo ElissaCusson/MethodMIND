@@ -227,9 +227,10 @@ def get_abstract_by_doi(dois= [None]):
         # Parse the XML response
         root = ET.fromstring(fetch_response.content)
         # Extract the abstract
-        abstract_elem = root.find(".//AbstractText")
-        if abstract_elem is not None:
-            abstract_list.append(abstract_elem.text)
+        abstract_elems = root.findall(".//AbstractText")
+        if abstract_elems:
+            full_abstract = " ".join([elem.text for elem in abstract_elems if elem.text])
+            abstract_list.append(full_abstract)
         else:
             abstract_list.append('NR')
     return [abstract_list, True]
@@ -260,7 +261,7 @@ if __name__=='__main__':
     # embedded_query = user_input_enhancing(user_query)
 
     ########### MVP TEST
-    user_query = ''
+    #user_query = ''
     user_query = "Which methods can I use to measure tremor decrease and gait improvement in Parkinson patients receiving deep brain stimulation?"
 
     ###############
@@ -278,8 +279,9 @@ if __name__=='__main__':
     # print(ids)
 
     dois = set(handle_multiple_metadata(ids[0])['doi'])
-    print(len(dois))
+    print(dois)
     # # get_abstract_by_doi tests:
+
     print(get_abstract_by_doi(dois= [None]))
     print(get_abstract_by_doi(dois= ['10.1007/s00296potatoe-011-2267-2']))
     abstracts = get_abstract_by_doi(dois= dois)[0]

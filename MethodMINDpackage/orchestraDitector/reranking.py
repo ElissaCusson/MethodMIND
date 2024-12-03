@@ -20,7 +20,7 @@ def reranking(user_input, abstracts, n_results=5):
     ranked_results = sorted(ranked_results, key=lambda x: x[1], reverse=True)
 
     # Get 5 best abstracts
-    results = ranked_results[0:5]
+    results = ranked_results[0:n_results]
 
     return results
 

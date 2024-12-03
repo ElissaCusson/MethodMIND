@@ -17,4 +17,4 @@ Under the "API Key" section, click on "Create an API Key".
 You will be presented with a new API key. Copy this key for later use.
 
 ## Load your database from 2014 to 2024:
-Run the embedding.py file three times using the corresponding search strategy parameter each time (PUBMED_SEARCH_STRATEGY_2014_to_2017, PUBMED_SEARCH_STRATEGY_2018_to_2020, PUBMED_SEARCH_STRATEGY_2021_to_2024)
+Run the embedding.py file three times using the corresponding search strategy parameter each time (change Pubmed.py in line 12 'term' with: PUBMED_SEARCH_STRATEGY_2014_to_2017, PUBMED_SEARCH_STRATEGY_2018_to_2020, PUBMED_SEARCH_STRATEGY_2021_to_2024)
