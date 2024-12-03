@@ -47,6 +47,8 @@ TestResults.xml
 .python-version
 # Data folder
 data/
+#Notebooks folder
+notebooks/
 # Environment variables
 .env
 # Local LLM files

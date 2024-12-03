@@ -1,4 +1,3 @@
-#run pip install -r requirements-dev.txt
 pytest
 pylint
 ipdb
@@ -6,10 +5,12 @@ numpy
 pandas
 matplotlib
 scikit-learn
+huggingface-hub
 torch
 transformers
 google-generativeai
 streamlit
 transformers
 pymilvus
+langchain-community
 sentencepiece

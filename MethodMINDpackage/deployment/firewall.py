@@ -41,9 +41,9 @@ def retrieve_all_keywords(client, collection_name="MethodVectors"):
         print(f"An error occurred during keyword retrieval: {e}")
         return set()
 
-
-
-firewall_all_keywords('')
+if __name__=='__main__':
+    pass
+    # firewall_all_keywords('')
 
 #{'Parkinson’s disease, anhedonia, levodopa dosage, mortality, predictive factors', 'Acute encephalitis syndrome (AES),
 # anti-NMDAR encephalitis, autoimmune encephalitis, children, immune mediated encephalitis, viral encephalitis', 'Craniotomy,
