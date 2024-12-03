@@ -1,11 +1,12 @@
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from MethodMINDpackage.orchestraDitector.retrival import *
 
 # Load monoT5
 model_name = "castorini/monot5-base-msmarco"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
-def reranking(user_input, abstracts, n_results):
+def reranking(user_input, abstracts, n_results=5):
     # Rerank each document
     ranked_results = []
     for abtract in abstracts:
@@ -22,3 +23,35 @@ def reranking(user_input, abstracts, n_results):
     results = ranked_results[0:5]
 
     return results
+
+
+if __name__=="__main__":
+    pass
+    ########### MVP TEST
+    user_query = ''
+    user_query = "Which methods can I use to measure tremor decrease and gait improvement in Parkinson patients receiving deep brain stimulation?"
+
+    ###############
+
+    # # Display the most similar document
+    similarity = search_similarity(user_query, k=10)
+    print(similarity)
+
+    # Multiple similarity test:
+    multiple_similarities = handle_multiple_similarities(similarity[0][0])
+    # print(multiple_similarities)
+
+    # # query by id tests:
+    ids=query_by_id(set_query_ids=multiple_similarities)
+    # print(ids)
+
+    dois = set(handle_multiple_metadata(ids[0])['doi'])
+    print(len(dois))
+    # # get_abstract_by_doi tests:
+    print(get_abstract_by_doi(dois= [None]))
+    print(get_abstract_by_doi(dois= ['10.1007/s00296potatoe-011-2267-2']))
+    abstracts = get_abstract_by_doi(dois= dois)[0]
+    # for abstract in abstracts:
+    #     print(abstract)
+    #     print('POTATOE')
+    print(reranking(user_query, abstracts))

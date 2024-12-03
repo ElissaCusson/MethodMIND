@@ -89,6 +89,7 @@ def test_embedding(query):
     return embedding
 
 def search_similarity(query, k=3):
+    """Takes raw text (base query) and returns a nested list [data: ["['id: ..., distance: ..., entity: {}', ...]], True]"""
     if query is None or not query.strip():
         return [None, False, "Query is required."]
     # client=connectDB()
@@ -150,7 +151,7 @@ def query_by_id_client(query_id=None):
 
 def query_by_id(set_query_ids=None):
     """
-    Retrieve metadata for a specific ID from the collection.
+    Retrieve metadata for a list of IDs from the collection.
 
     Args:
         set_query_ids: A set of the ID to search for.
@@ -192,6 +193,7 @@ def query_by_id(set_query_ids=None):
     return [metadata_list, True]
 
 def get_abstract_by_doi(dois= [None]):
+    """ Takes a list of DOIs returns a nested list of abstracts --> [abstract_list, True] """
     abstract_list = []
     for doi in dois:
         if doi == None:
@@ -239,7 +241,7 @@ def handle_multiple_similarities(best_matches):
 def handle_multiple_metadata(list_metadata):
     """ Gets a list of metadata and returns a dict with the metadata grouped by category"""
     ordered_metadata = defaultdict(list)
-    for i, metadata in enumerate(list_metadata):
+    for metadata in list_metadata:
         ordered_metadata['id'].append(metadata[0]['id'])
         ordered_metadata['title'].append(metadata[0]['title'])
         ordered_metadata['doi'].append(metadata[0]['doi'])
@@ -265,7 +267,7 @@ if __name__=='__main__':
 
     # # Display the most similar document
     similarity = search_similarity(user_query, k=10)
-    # print(similarity)
+    print(similarity)
 
     # Multiple similarity test:
     multiple_similarities = handle_multiple_similarities(similarity[0][0])
@@ -280,4 +282,7 @@ if __name__=='__main__':
     # # get_abstract_by_doi tests:
     print(get_abstract_by_doi(dois= [None]))
     print(get_abstract_by_doi(dois= ['10.1007/s00296potatoe-011-2267-2']))
-    print(get_abstract_by_doi(dois= dois))
+    abstracts = get_abstract_by_doi(dois= dois)[0]
+    # for abstract in abstracts:
+    #     print(abstract)
+    #     print('POTATOE')

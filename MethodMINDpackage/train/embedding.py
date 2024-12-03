@@ -107,7 +107,7 @@ def store_abstracts_embeddings(client, collection_name):
 if __name__=='__main__':
     #pass
     # Store embeddings in Milvus
-    #store_chunk_embeddings(client, collection_name) # chunk embeddings
+    store_chunk_embeddings(client, collection_name) # chunk embeddings
     #store_abstracts_embeddings(client, collection_name) # abstract embeddings
 
     row_count = client.get_collection_stats(collection_name=collection_name)['row_count']

@@ -9,7 +9,7 @@ def get_pubmed_data():
     # Step 1: Search for articles using ESearch
     search_params = {
         "db": "pubmed",
-        "term": PUBMED_SEARCH_STRATEGY_2021_to_2024,
+        "term": PUBMED_SEARCH_STRATEGY_2014_to_2017, # PUBMED_SEARCH_STRATEGY_2018_to_2020, PUBMED_SEARCH_STRATEGY_2021_to_2024
         "retmax": 9999,  # Number of results to retrieve
         "retmode": "json",
         "api_key": PUBMED_API_KEY
