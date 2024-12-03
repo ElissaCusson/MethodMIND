@@ -44,6 +44,6 @@ def reranking(user_input, metadata_list, n_results=5):
     if n_results > len(ranked_results):
         top_ranked = ranked_results
     else:
-        top_ranked = ranked_results[:n_results - 1]
+        top_ranked = ranked_results[:n_results]
 
     return top_ranked
