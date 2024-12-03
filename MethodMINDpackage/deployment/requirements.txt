@@ -21,4 +21,4 @@ pymilvus
 langchain-community
 langchain-milvus
 sentencepiece
-git+https://github.com/ElissaCusson/MethodMIND/tree/deployment/MethodMINDpackage
+git+https://github.com/ElissaCusson/MethodMIND
