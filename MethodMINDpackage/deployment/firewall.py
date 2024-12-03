@@ -41,7 +41,6 @@ def retrieve_all_keywords(client, collection_name="MethodVectors"):
         print(f"An error occurred during keyword retrieval: {e}")
         return set()
 
-
 if __name__=='__main__':
     pass
     # firewall_all_keywords('')
