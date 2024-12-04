@@ -66,7 +66,7 @@ def search_similarity(query, k=3):
     collection = Collection(name="MethodVectors", using=client_alias)
 
     # Get the query embedding
-    query_embedding = test_embedding(user_input_enhancing(query))
+    query_embedding = test_embedding(query)
 
     results = collection.search(
         data=[query_embedding],
