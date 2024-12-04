@@ -1,9 +1,9 @@
 import streamlit as st
 from PIL import Image
-from MethodMINDpackage.orchestraDitector.LLM import llm_test
-from MethodMINDpackage.orchestraDitector.retrival import user_input_enhancing, search_similarity, query_by_id, get_abstract_by_doi, handle_multiple_similarities
+from MethodMINDpackage.orchestration.LLM import llm_gemini_response_generation
+from MethodMINDpackage.orchestration.retrieval import user_input_enhancing, search_similarity, query_by_id, get_abstract_by_doi, handle_multiple_similarities
 from MethodMINDpackage.deployment.firewall import firewall_all_keywords
-from MethodMINDpackage.orchestraDitector.reranking import reranking
+from MethodMINDpackage.orchestration.reranking import reranking
 
 st.set_page_config(layout="wide")
 
@@ -192,11 +192,12 @@ def home_page():
                                     Here are the abstract data: {abstracts_in_sequence}'''
 
                 #full llm
-                output = llm_test(full_text_input)
+                output = llm_gemini_response_generation(full_text_input)
 
             else:
                 #in case there are other types of errors
                 stopped_by_firewall = True
+                done_processing = False
 
 
             progress_bar.progress(100)
@@ -242,18 +243,23 @@ def home_page():
 
         #if request is outside of scope
         elif stopped_by_firewall:
-            st.subheader('The request is outside of the scope of the model. Please try again with another request.')
+            progress_text.text('Stopped 🛑')
+            st.subheader('The request is outside of the scope of the model.🥺')
+            st.subheader('Please try again with another request.🙏')
 
         #if stopped at similarity step
         elif stopped_at_similarity:
+            progress_text.text('Stopped 🛑')
             st.subheader(similarity[2])
 
         #if stopped at query by id step
         elif stopped_at_query_by_id:
+            progress_text.text('Stopped 🛑')
             st.subheader(metadata_list[2])
 
         #if stopped at abstract by doi
         elif stopped_at_abstract_by_doi:
+            progress_text.text('Stopped 🛑')
             st.subheader('stopped at abstract_by_doi')
 
     #disclaimer

@@ -111,14 +111,5 @@ def get_pubmed_data(search_strategy = PUBMED_SEARCH_STRATEGY_2021_to_2024):
     print(f"Successfully fetched {len(df)} articles.")
     return df
 
-
 if __name__=='__main__':
     pass
-    # # Test the function
-    # Set display options to avoid truncation
-    #pd.set_option('display.max_colwidth', None)  # Allows full content in cells
-    #pd.set_option('display.max_rows', None)     # Ensures all rows are shown
-
-    # Assuming get_pubmed_data() returns a DataFrame
-    #data = get_pubmed_data()
-    #print(data['Abstract'])  # View the Abstract column
