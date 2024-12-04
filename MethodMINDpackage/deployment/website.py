@@ -170,9 +170,6 @@ def home_page():
                 progress_text.text('Generating answer...🚀')
                 progress_bar.progress(75)
 
-                #testing llm
-                output = llm_test(text_input)
-
                 #final list of dictionaries
                 final_form = reranked
 
@@ -191,6 +188,7 @@ def home_page():
             else:
                 #in case there are other types of errors
                 stopped_by_firewall = True
+                done_processing = False
 
 
             progress_bar.progress(100)
@@ -232,18 +230,23 @@ def home_page():
 
         #if request is outside of scope
         elif stopped_by_firewall:
-            st.subheader('The request is outside of the scope of the model. Please try again with another request.')
+            progress_text.text('Stopped 🛑')
+            st.subheader('The request is outside of the scope of the model.🥺')
+            st.subheader('Please try again with another request.🙏')
 
         #if stopped at similarity step
         elif stopped_at_similarity:
+            progress_text.text('Stopped 🛑')
             st.subheader(similarity[2])
 
         #if stopped at query by id step
         elif stopped_at_query_by_id:
+            progress_text.text('Stopped 🛑')
             st.subheader(metadata_list[2])
 
         #if stopped at abstract by doi
         elif stopped_at_abstract_by_doi:
+            progress_text.text('Stopped 🛑')
             st.subheader('stopped at abstract_by_doi')
 
     #disclaimer
