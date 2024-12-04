@@ -21,7 +21,7 @@ def user_input_enhancing(user_input):
 
     # Define the prompt
     prompt = (
-        f"Create a detailed abstract for the following user query:\n\n"
+        f"Generate a detailed abstract based on the following user query, adhering to the IMRaD structure (Introduction, Methods, Results, and Discussion/Conclusion):\n\n"
         f"User query: {user_input}\n\n"
         f"Abstract:"
     )
