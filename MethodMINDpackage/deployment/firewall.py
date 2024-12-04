@@ -1,4 +1,4 @@
-from MethodMINDpackage.train.database import connectload
+from MethodMINDpackage.train.database import connectload, disconnect_client
 import re
 
 
@@ -16,18 +16,12 @@ def firewall_all_keywords(text_input):
     # Create a list of individual keywords, ensuring non-empty values
     split_items = [item.strip() for sublist in key_words for item in sublist.split(',') if item.strip()]
 
-    # Debug: Print split_items to ensure it's correct
-    print("Keywords List (non-empty):", split_items)
-
     if not split_items:  # If no valid keywords after filtering empty ones
         print("No valid keywords found.")
         return False
 
     # Construct the regular expression pattern with proper boundaries
     pattern = r'\b(?:' + '|'.join([re.escape(item.lower()) for item in split_items]) + r')\b'
-
-    # Debug: Print the constructed pattern
-    print("Regex Pattern:", pattern)
 
     # Strip leading/trailing spaces from the text_input before matching
     text_input_clean = text_input.strip().lower()
@@ -40,6 +34,8 @@ def firewall_all_keywords(text_input):
 
     # Debug: Check if a match is found
     print("Match found:", match)
+
+    disconnect_client(client, collection_name)
 
     return bool(match)
 
