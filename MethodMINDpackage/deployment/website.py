@@ -1,9 +1,9 @@
 import streamlit as st
 from PIL import Image
-from MethodMINDpackage.orchestraDitector.LLM import llm_test
-from MethodMINDpackage.orchestraDitector.retrival import user_input_enhancing, search_similarity, query_by_id, get_abstract_by_doi, handle_multiple_similarities
+from MethodMINDpackage.orchestration.LLM import llm_gemini_response_generation
+from MethodMINDpackage.orchestration.retrieval import user_input_enhancing, search_similarity, query_by_id, get_abstract_by_doi, handle_multiple_similarities
 from MethodMINDpackage.deployment.firewall import firewall_all_keywords
-from MethodMINDpackage.orchestraDitector.reranking import reranking
+from MethodMINDpackage.orchestration.reranking import reranking
 
 st.set_page_config(layout="wide")
 
@@ -170,9 +170,6 @@ def home_page():
                 progress_text.text('Generating answer...🚀')
                 progress_bar.progress(75)
 
-                #testing llm
-                output = llm_test(text_input)
-
                 #final list of dictionaries
                 final_form = reranked
 
@@ -186,7 +183,7 @@ def home_page():
                 full_text_input = f'''Based on the following abstracts, {text_input} \n\n Abstracts: {abstracts_in_sequence}'''
 
                 #full llm
-                output = llm_test(full_text_input)
+                output = llm_gemini_response_generation(full_text_input)
 
             else:
                 #in case there are other types of errors

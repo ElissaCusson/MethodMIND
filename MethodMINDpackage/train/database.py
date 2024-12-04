@@ -1,8 +1,6 @@
 import os
 from pymilvus import FieldSchema, CollectionSchema, DataType, MilvusClient, connections
 from MethodMINDpackage.params import *
-# from pymilvus import Collection
-
 
 def define_schema():
     fields = [
