@@ -219,7 +219,7 @@ def home_page():
             abstracts_html = "".join([
                 f'''<strong>{abstract["title"]}</strong>
                 <span style="font-style: italic; color: #aaa;">({abstract["date"]})</span>:
-                <a href="{abstract["link"]}" target="_blank" style="color: yellow; text-decoration: none; word-wrap: break-word;">{abstract["link"]}</a>
+                <a href="{abstract["link"]}" target="_blank" style="color: orange; text-decoration: none; word-wrap: break-word;">{abstract["link"]}</a>
                 <br><br>'''
                 for abstract in abstracts_list
             ])
@@ -228,7 +228,7 @@ def home_page():
 
             #displaying abstracts
             st.markdown('### Abstracts:')
-            st.markdown(f"""<div style="border: 2px solid white; padding: 10px; border-radius: 5px;">{abstracts_html}</div>""", unsafe_allow_html=True)
+            st.markdown(f"""<div style="border: 2px solid gray; padding: 10px; border-radius: 5px;">{abstracts_html}</div>""", unsafe_allow_html=True)
 
         #if request is outside of scope
         elif stopped_by_firewall:
@@ -268,6 +268,9 @@ def disclaimer_page():
              We strongly recommend carefully reviewing and verifying the answers before
              applying them to your work. Always consult primary sources and expert opinions
              when making important research decisions.''')
+
+
+    # write disclaimer about only 2014 - 2024 years
 
 #                                                      ABOUT
 
