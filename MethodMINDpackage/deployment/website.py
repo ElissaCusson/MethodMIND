@@ -285,8 +285,20 @@ def disclaimer_page():
 def about_page():
     #about page
 
-    st.title('About us')
-    st.markdown("Elissa is our one and only leader. That's all you need to know")
+    st.title('About MethodMIND')
+    st.markdown('''## What is MethodMIND?''')
+    st.markdown('''MethodMIND is an advanced research tool designed to empower scientists, researchers, and healthcare professionals by providing tailored recommendations for experimental methodologies. It bridges the gap between complex scientific queries and actionable insights, helping users identify the best methods for their research needs.''')
+    st.markdown('''## Why is MethodMIND Important?''')
+    st.markdown('''In the era of information overload, researchers often face challenges in finding precise, evidence-based answers to their specific scientific questions. MethodMIND solves this problem by leveraging cutting-edge technology to curate and deliver methodologically sound recommendations. This tool aims to accelerate innovation and improve the reproducibility of scientific research across diverse domains, including neuroscience, biomedical research, and more.''')
+    st.markdown('''## How Does MethodMIND Work?''')
+    st.markdown('''MethodMIND combines powerful technologies to provide accurate and context-aware recommendations:
+Retrieval-Augmented Generation (RAG): Ensures access to a curated, up-to-date knowledge base, linking user queries with relevant literature and methodologies.
+SciBERT: A specialized language model trained on scientific texts to understand and analyze complex research language and concepts effectively.
+Large Language Models (LLMs): Enhance the tool’s ability to provide comprehensive and coherent responses tailored to user queries.''')
+
+    st.markdown('## Our Vision')
+    st.markdown('''At MethodMIND, we believe in unlocking the potential of cutting-edge AI to advance science. By streamlining the process of hypothesis testing and methodology selection, we aim to empower the global research community to achieve breakthroughs faster and more efficiently.''')
+
     st.markdown('''
         ## Credits
 
