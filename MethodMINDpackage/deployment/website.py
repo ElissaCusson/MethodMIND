@@ -292,9 +292,10 @@ def about_page():
     st.markdown('''In the era of information overload, researchers often face challenges in finding precise, evidence-based answers to their specific scientific questions. MethodMIND solves this problem by leveraging cutting-edge technology to curate and deliver methodologically sound recommendations. This tool aims to accelerate innovation and improve the reproducibility of scientific research across diverse domains, including neuroscience, biomedical research, and more.''')
     st.markdown('''## How Does MethodMIND Work?''')
     st.markdown('''MethodMIND combines powerful technologies to provide accurate and context-aware recommendations:
-Retrieval-Augmented Generation (RAG): Ensures access to a curated, up-to-date knowledge base, linking user queries with relevant literature and methodologies.
-SciBERT: A specialized language model trained on scientific texts to understand and analyze complex research language and concepts effectively.
-Large Language Models (LLMs): Enhance the tool’s ability to provide comprehensive and coherent responses tailored to user queries.''')
+        Retrieval-Augmented Generation (RAG): Ensures access to a curated, up-to-date knowledge base, linking user queries with relevant literature and methodologies.
+        SciBERT: A specialized language model trained on scientific texts to understand and analyze complex research language and concepts effectively.
+        Large Language Models (LLMs): Enhance the tool’s ability to provide comprehensive and coherent responses tailored to user queries.
+    ''')
 
     st.markdown('## Our Vision')
     st.markdown('''At MethodMIND, we believe in unlocking the potential of cutting-edge AI to advance science. By streamlining the process of hypothesis testing and methodology selection, we aim to empower the global research community to achieve breakthroughs faster and more efficiently.''')
@@ -317,8 +318,50 @@ Large Language Models (LLMs): Enhance the tool’s ability to provide comprehens
 #                                                    NAVIGATION
 
 #navigation sidebar (left column)
+
+st.markdown("""
+    <style>
+        .sidebar .sidebar-content {
+            padding-top: 10px;
+        }
+        /* Style for the hamburger menu icon */
+        .menu-icon {
+            cursor: pointer;
+            font-size: 30px;
+            padding: 10px;
+            display: block;
+            color: black;
+        }
+        .menu-icon:hover {
+            color: #007bff;
+        }
+        .sidebar .sidebar-content .stButton button {
+            font-size: 24px;
+            padding: 15px;
+            width: 100%;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Select a page", ["Home", "Disclaimer", "About"])
+
+if 'menu_open' not in st.session_state:
+    st.session_state.menu_open = False
+
+if 'selected_page' not in st.session_state:
+    st.session_state.selected_page = "Home"
+
+# Toggle the menu state
+if st.sidebar.button("☰", key="menu", help="Click to open/close menu"):
+    st.session_state.menu_open = not st.session_state.menu_open
+
+# Display content based on the toggle state
+if st.session_state.menu_open:
+    page = st.sidebar.radio("", ["Home", "Disclaimer", "About"], index=0)
+    st.session_state.selected_page = page
+else:
+    page = st.session_state.selected_page  # Keep the current page when the menu is closed
+
 
 if page == "Home":
     home_page()
