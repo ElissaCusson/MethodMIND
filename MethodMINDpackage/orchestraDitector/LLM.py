@@ -7,7 +7,5 @@ def llm_test(text):
 
     model = genai.GenerativeModel(model_name="gemini-1.5-flash")
 
-    prompt = text
-
-    response = model.generate_content(prompt)
+    response = model.generate_content(text)
     return response.text

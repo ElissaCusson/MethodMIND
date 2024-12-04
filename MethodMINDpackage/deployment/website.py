@@ -1,19 +1,19 @@
 import streamlit as st
 from PIL import Image
 from MethodMINDpackage.orchestraDitector.LLM import llm_test
-from MethodMINDpackage.orchestraDitector.retrival import search_similarity, query_by_id, get_abstract_by_doi, handle_multiple_similarities, handle_multiple_metadata
+from MethodMINDpackage.orchestraDitector.retrival import user_input_enhancing, search_similarity, query_by_id, get_abstract_by_doi, handle_multiple_similarities
 from MethodMINDpackage.deployment.firewall import firewall_all_keywords
 from MethodMINDpackage.orchestraDitector.reranking import reranking
 
 st.set_page_config(layout="wide")
 
+number_of_abstracts_to_search_similarity = 30
+
 #                                                  TO DO
 
-#code for number of abstracts
 #add emoji/gif while loading
 #explain how it works
 #remove duplicates /set
-
 
 #                                                   HOME
 
@@ -22,12 +22,12 @@ def home_page():
 
     #displaying logo at the center
 
-    image_path = "MethodMINDpackage/deployment/images/logo.png"
+    image_path = "MethodMINDpackage/deployment/images/New_Logo.jpg"
     try:
         # Try to open the image
         image = Image.open(image_path)
         st.columns(3)[1].image(image)
-    except Exception as e:
+    except Exception:
         # If file not found, display a placeholder message
         st.columns(3)[1].write('Image not found or cannot be opened.')
 
@@ -86,13 +86,13 @@ def home_page():
 
     # Second column with a container and border
     with columns[1]:
-        st.markdown('<div class="container-border">Which methods can I use to measure migraine pain intensity?</div>', unsafe_allow_html=True)
+        st.markdown('<div class="container-border">Which methods can I use to measure migraine intensity?</div>', unsafe_allow_html=True)
 
     #space
     st.write('###')
 
     #number of abstracts
-    slider_values = [5, 7, 10, 15, 20, 30]
+    slider_values = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     number_of_abstracts = st.select_slider('Select a number of abstracts to return:', options=slider_values, value=10)
 
     #request
@@ -128,8 +128,9 @@ def home_page():
                 progress_text.text('Searching for relevant abstracts...🔍')
                 progress_bar.progress(15)
 
-                # #hard coded
-                similarity = search_similarity(text_input, k = 3)
+                #enhancing input
+                text_enhanced = user_input_enhancing(text_input)
+                similarity = search_similarity(text_enhanced, k = number_of_abstracts_to_search_similarity)
 
                 #verify similarity step
                 if similarity[1] is False:
@@ -164,7 +165,7 @@ def home_page():
                     progress_bar.progress(55)
 
                 # #reranking
-                reranked = reranking(text_input, abstract_by_doi_list[0])
+                reranked = reranking(text_input, abstract_by_doi_list[0], number_of_abstracts)
 
                 progress_text.text('Generating answer...🚀')
                 progress_bar.progress(75)

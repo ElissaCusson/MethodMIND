@@ -9,8 +9,9 @@ def get_pubmed_data_by_year():
     df3 = get_pubmed_data(PUBMED_SEARCH_STRATEGY_2021_to_2024)
     return  pd.concat([df1, df2, df3], ignore_index=True)
 
-def get_pubmed_data(search_strategy = PUBMED_SEARCH_STRATEGY_2014_to_2017):
-    '''This function calls the PubMed API and returns abstracts, metadata, and full-text links in a DataFrame'''
+def get_pubmed_data(search_strategy = PUBMED_SEARCH_STRATEGY_2021_to_2024):
+    """This function calls the PubMed API and returns abstracts, metadata, and full-text links in a DataFrame."""
+
     # Step 1: Search for articles using ESearch
     search_params = {
         "db": "pubmed",
@@ -61,11 +62,17 @@ def get_pubmed_data(search_strategy = PUBMED_SEARCH_STRATEGY_2014_to_2017):
         # Extract Title, Abstract, DOI, Keywords, Publication Date, and Full-Text Link
         for article in root.findall(".//PubmedArticle"):
             title = article.find(".//ArticleTitle")
-            title_text = title.text if title is not None else "NR"
+            if title is None or title.text is None or not title.text.strip():  # Check if title or title.text is None or empty
+                print("Skipping article with no valid title.")
+                continue
+            title_text = title.text.strip()
 
             # Extract the abstract
             abstract_elems = article.findall(".//AbstractText")
-            abstract = " ".join([elem.text.strip() for elem in abstract_elems if elem.text]) if abstract_elems else "NR"
+            abstract = " ".join([elem.text.strip() for elem in abstract_elems if elem.text])
+
+            # Normalize whitespace in abstract
+            abstract = " ".join(abstract.split())
 
             # Extract DOI and Full-Text Link
             doi = None
@@ -88,8 +95,8 @@ def get_pubmed_data(search_strategy = PUBMED_SEARCH_STRATEGY_2014_to_2017):
             else:
                 pub_date = "NR"
 
-            # Only add articles with a non-null Abstract and DOI
-            if abstract != "NR" and doi is not None:
+            # Only add articles with a non-null and non-empty Abstract and DOI
+            if abstract and doi and title_text:
                 data.append({
                     "Title": title_text,
                     "Abstract": abstract,

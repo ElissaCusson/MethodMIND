@@ -1,5 +1,7 @@
 from transformers import AutoModel, AutoTokenizer
 import torch
+import re
+import string
 from chunking import chunking
 from database import disconnect_client
 from PubMed import get_pubmed_data, get_pubmed_data_by_year
@@ -12,8 +14,15 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModel.from_pretrained(model_name)
 
 def embed_text(text):
-    '''This function vectorizes text using the preloaded SciBERT model.'''
-    # Tokenize the input text
+    '''This function vectorizes text using the preloaded SciBERT model and cleans the text.'''
+
+    # Convert to lowercase
+    text = text.lower()
+
+    # Remove punctuation and special characters
+    text = re.sub(f"[{string.punctuation}]", "", text)
+
+    # Tokenize the cleaned text
     inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
 
     # Pass through the model
@@ -66,7 +75,7 @@ def store_chunk_embeddings(client, collection_name):
 
 def store_abstracts_embeddings(client, collection_name):
     # all 3 get pubmed data
-    df = get_pubmed_data(PUBMED_SEARCH_STRATEGY_2014_to_2017)
+    df = get_pubmed_data_by_year()
     # Filter out rows where Abstract is None or empty
     df = df[df['Abstract'].notna() & (df['Abstract'].str.strip() != '')]
 
