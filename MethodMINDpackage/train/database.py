@@ -100,7 +100,6 @@ def create_milvus(database_name="MethodMIND"):
     # Creating the index
     create_index(client, collection_name="MethodVectors")
 
-
     return client
 
 def connectDB_client(database_name="MethodMIND"):
