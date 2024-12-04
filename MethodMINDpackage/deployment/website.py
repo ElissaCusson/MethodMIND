@@ -227,12 +227,11 @@ def home_page():
 
             # Generate the HTML for multiple abstracts
             abstracts_html = "".join([
-                f'''<strong>{abstract["num"]}. </strong>
-                <strong>{abstract["title"]}</strong>
+                f'''<strong>{index + 1}. {abstract["title"]}</strong>
                 <span style="font-style: italic; color: #aaa;">({abstract["date"]})</span>:
                 <a href="{abstract["link"]}" target="_blank" style="color: orange; text-decoration: none; word-wrap: break-word;">{abstract["link"]}</a>
                 <br><br>'''
-                for abstract in abstracts_list
+                for index, abstract in enumerate(abstracts_list)
             ])
 
             st.write('###')
