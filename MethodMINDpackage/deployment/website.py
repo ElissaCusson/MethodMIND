@@ -343,7 +343,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.sidebar.title("Navigation")
+st.sidebar.title("Menu")
 
 if 'menu_open' not in st.session_state:
     st.session_state.menu_open = False
