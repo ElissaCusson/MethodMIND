@@ -1,9 +1,6 @@
 from MethodMINDpackage.train.database import connectload
 import re
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-
 
 def firewall_all_keywords(text_input):
     # firewall with all the keywords
