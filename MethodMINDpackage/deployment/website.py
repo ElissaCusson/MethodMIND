@@ -9,12 +9,6 @@ st.set_page_config(layout="wide")
 
 number_of_abstracts_to_search_similarity = 30
 
-#                                                  TO DO
-
-#add emoji/gif while loading
-#explain how it works
-#remove duplicates /set
-
 #                                                   HOME
 
 def home_page():
@@ -43,7 +37,7 @@ def home_page():
     st.subheader('Description:')
     with st.container(border = True):
         st.markdown('''
-        Our platform helps researchers like you find the most relevant and up-to-date methods for proving your hypothesis.
+        Our platform helps researchers like you discover the most relevant and up-to-date methods for studying and treating brain diseases.
         Simply enter your research question or hypothesis, and our model will search through a vast database of PubMed
         abstracts, pinpointing studies and methodologies most related to your query.
 
@@ -122,6 +116,8 @@ def home_page():
                 #enhancing input
                 text_enhanced = user_input_enhancing(text_input)
                 similarity = search_similarity(text_enhanced, k = number_of_abstracts_to_search_similarity)
+
+                #best similarity threshold at 0.88
 
                 #verify similarity step
                 if similarity[1] is False:
@@ -276,8 +272,13 @@ def disclaimer_page():
              applying them to your work. Always consult primary sources and expert opinions
              when making important research decisions.''')
 
+        st.markdown('''
+            Please note that the abstracts provided are sourced exclusively from publications between 2014 and 2024.
+        ''')
 
-    # write disclaimer about only 2014 - 2024 years
+        st.markdown('''
+            If you're not satisfied with the publications or the answer provided, there's a chance you may receive a different response by clicking the submit button again.
+        ''')
 
 #                                                      ABOUT
 
@@ -288,8 +289,18 @@ def about_page():
     st.markdown("Elissa is our one and only leader. That's all you need to know")
     st.markdown('''
         ## Credits
-        insert credits
+
+        Our platform utilizes the following advanced technologies:
+
+        - **Gemini LLM**: A powerful language model used to generate the answer given.
+        - **SciBERT Embeddings**: A BERT-based model optimized for scientific text understanding.
+        - **Milvus**: A high-performance vector database for efficient similarity search and data management.
+        - **PubMed**: A resource used for obtaining and referencing scientific abstracts.
+
+        These tools and resources are integral to the functionality of our platform, and their use is subject to their respective terms and conditions.
+
     ''')
+
 
 #                                                    NAVIGATION
 

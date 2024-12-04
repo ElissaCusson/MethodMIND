@@ -93,7 +93,7 @@ def create_milvus(database_name="MethodMIND"):
     schema=define_schema()
 
     # Create collection
-    collection_name=create_collection(schema, client, "MethodVectors")
+    create_collection(schema, client, "MethodVectors")
 
     # Creating the index
     create_index(client, collection_name="MethodVectors")
