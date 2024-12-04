@@ -1,6 +1,10 @@
 from MethodMINDpackage.train.database import connectload
 import re
 
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+
 def firewall_all_keywords(text_input):
     # firewall with all the keywords
 
@@ -42,6 +46,8 @@ def firewall_all_keywords(text_input):
 
     return bool(match)
 
+
+
 #retrieve keywords for firewall, haven't tested it yet
 def retrieve_all_keywords(client, collection_name="MethodVectors"):
     """
@@ -74,4 +80,3 @@ def retrieve_all_keywords(client, collection_name="MethodVectors"):
 
 if __name__=='__main__':
     pass
-    #print(firewall_all_keywords('what a cute little website aint it'))
