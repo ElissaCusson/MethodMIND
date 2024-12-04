@@ -82,7 +82,7 @@ def home_page():
 
     # First column with a container and border
     with columns[0]:
-        st.markdown('<div class="container-border">Which methods can I use to measure tremor decrease and gait improvement in Parkinson patients receiving deep brain stimulation?</div>', unsafe_allow_html=True)
+        st.markdown('<div class="container-border">Which methods can I use to measure gait improvement in Parkinson patients receiving deep brain stimulation?</div>', unsafe_allow_html=True)
 
     # Second column with a container and border
     with columns[1]:
@@ -176,11 +176,20 @@ def home_page():
                 #full text input for llm
                 #make abstracts in sequence
                 abstracts_in_sequence = ''
+                i=1
                 for a in final_form:
-                    abstracts_in_sequence += f'\n\n{a["abstract"]}'
+                    abstracts_in_sequence += f'\n\n{i,a["abstract"]}'
+                    i=1+1
 
                 #full text input
-                full_text_input = f'''Based on the following abstracts, {text_input} \n\n Abstracts: {abstracts_in_sequence}'''
+                #full_text_input = f'''Based on the following abstracts, {text_input} \n\n Abstracts: {abstracts_in_sequence}'''
+                full_text_input = f'''You are a highly knowledgeable lecturer specializing in central nervous system, brain and neurodegenerative diseases. Your role is to provide detailed, accurate, and evidence-based explanations to answer the following question: {text_input}.
+                                    Analyze the data provided in the abtracts bellow and synthesize the information into a clear and concise explanation to answer the question. Your responses must:
+                                    1. Explain concepts in a way suitable for a professional audience, such as researchers, or health practitioners, while remaining approachable for non-experts if necessary.
+                                    2. Use medical terminology appropriately, but ensure definitions or explanations are provided for complex terms.
+                                    3. Provide references to the abtract number into brackets after each corresponding sentences.
+                                    If the input data is unclear or insufficient, request clarification or more context to ensure an accurate response.
+                                    Here are the abstract data: {abstracts_in_sequence}'''
 
                 #full llm
                 output = llm_gemini_response_generation(full_text_input)
@@ -204,13 +213,16 @@ def home_page():
 
             # For multiple abstracts
             abstracts_list = []
+            j = 1
 
             for abs in final_form:
                 dictionary = {}
+                dictionary['num'] = j
                 dictionary['title'] = abs.get('title')
                 dictionary['link'] = abs.get('link')
                 dictionary['date'] = abs.get('date')
                 abstracts_list.append(dictionary)
+                j += 1
 
 
             # Generate the HTML for multiple abstracts
