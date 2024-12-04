@@ -3,6 +3,7 @@ import torch
 import re
 import string
 from chunking import chunking
+from database import disconnect_client
 from PubMed import get_pubmed_data, get_pubmed_data_by_year
 from pymilvus import MilvusClient
 from MethodMINDpackage.params import *
@@ -13,8 +14,9 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModel.from_pretrained(model_name)
 
 def embed_text(text):
-    '''This function vectorizes text using the preloaded SciBERT model.'''
-     # Convert to lowercase
+    '''This function vectorizes text using the preloaded SciBERT model and cleans the text.'''
+
+    # Convert to lowercase
     text = text.lower()
 
     # Remove punctuation and special characters
@@ -31,18 +33,6 @@ def embed_text(text):
     embeddings = outputs.last_hidden_state.mean(dim=1)
 
     return embeddings
-
-
-# connect to Milvus
-database_name="MethodMIND"
-client = MilvusClient(uri=DATABASE_PATH)  # Initialize MilvusClient
-collection_name = "MethodVectors"
-
-# test connect to collection
-if collection_name in client.list_collections():
-    print(f"Collection {collection_name} already exists...")
-else:
-    print("No collection")
 
 def store_chunk_embeddings(client, collection_name):
     """Store the embeddings for each chunk along with metadata."""
@@ -107,17 +97,27 @@ def store_abstracts_embeddings(client, collection_name):
         }
 
         # Insert into Milvus
-        client.insert(collection_name=collection_name, data=[group_embeddings])
+        client.insert(collection_name=collection_name, data=[group_embeddings], progress_bar=True)
         print(f"Inserted abstract {i} into collection {collection_name}.")
-
     return print('Embedded abstracts added in Milvus')
 
-
 if __name__=='__main__':
-    #pass
+    pass
+    # connect to Milvus
+    database_name="MethodMIND"
+    client = MilvusClient(uri=DATABASE_PATH)  # Initialize MilvusClient
+    collection_name = "MethodVectors"
+
+    # test connect to collection
+    if collection_name in client.list_collections():
+        print(f"Collection {collection_name} already exists...")
+    else:
+        print("No collection")
     # Store embeddings in Milvus
     #store_chunk_embeddings(client, collection_name) # chunk embeddings
     store_abstracts_embeddings(client, collection_name) # abstract embeddings
 
     row_count = client.get_collection_stats(collection_name=collection_name)['row_count']
     print(f"\n {database_name} database as {row_count} in collection {collection_name}")
+
+    disconnect_client(client, collection_name="MethodVectors")

@@ -67,8 +67,7 @@ def checkcollection(client,collection_name="MethodVectors"):
         print(f"Collection {collection_name} does not exist")
     else:
         print(f"Collection {collection_name} exists")
-
-    client.flush(collection_name)
+    # client.flush(collection_name)
     return collection_name
 
 def create_milvus(database_name="MethodMIND"):
