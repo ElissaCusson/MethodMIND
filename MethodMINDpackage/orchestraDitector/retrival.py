@@ -38,42 +38,7 @@ def user_input_enhancing(user_input):
     if not hypothetical_abstract or not hypothetical_abstract.strip():
         return "Failed to generate a valid hypothetical abstract."
 
-    # Chunk the hypothetical abstract
-    # Create a Document object
-    document = Document(page_content=hypothetical_abstract, metadata={"source": "HyDE"})
-
-    # Create a RecursiveCharacterTextSplitter instance
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=100, chunk_overlap=20)
-
-    # Split the document into chunks
-    chunks = text_splitter.split_documents([document])
-
-
-    # Embed the chunks using SciBERT
-    # Load SciBERT model and tokenizer
-    model_name = "allenai/scibert_scivocab_uncased"
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModel.from_pretrained(model_name)
-
-    # Prepare the embeddings list
-    user_input_embeddings = []
-
-    # Process each chunk
-    for chunk in chunks:
-        # Tokenize the chunk text
-        inputs = tokenizer(chunk.page_content, return_tensors="pt", padding=True, truncation=True, max_length=512)
-
-        # Pass through the model
-        with torch.no_grad():
-            outputs = model(**inputs)
-
-        # Extract the embeddings (mean pooling over token embeddings)
-        chunk_embedding = outputs.last_hidden_state.mean(dim=1).squeeze().numpy()
-        user_input_embeddings.append(chunk_embedding)
-    # print(type(user_input_embeddings[0]))
-    # print(user_input_embeddings[0])
-    # Return the list of embeddings
-    return user_input_embeddings
+    return hypothetical_abstract
 
 def test_embedding(query):
     # Embed the chunks using SciBERT
