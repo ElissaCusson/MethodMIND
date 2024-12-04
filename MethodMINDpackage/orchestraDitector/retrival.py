@@ -51,9 +51,9 @@ def user_input_enhancing(user_input):
 
     # Embed the chunks using SciBERT
     # Load SciBERT model and tokenizer
-    model_name = "allenai/scibert_scivocab_uncased"
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModel.from_pretrained(model_name)
+    #model_name = "allenai/scibert_scivocab_uncased"
+    #tokenizer = AutoTokenizer.from_pretrained(model_name)
+    #model = AutoModel.from_pretrained(model_name)
 
     # Prepare the embeddings list
     #user_input_embeddings = []
