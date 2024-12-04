@@ -55,12 +55,6 @@ def home_page():
     #space
     st.write('##')
 
-    #explaining how it works
-    expander = st.expander("How it works:")
-    expander.write("""
-        we'll implement this last
-    """)
-
     #frequently asked questions
     st.subheader('Example questions:')
     columns = st.columns(2)
@@ -87,9 +81,6 @@ def home_page():
     # Second column with a container and border
     with columns[1]:
         st.markdown('<div class="container-border">Which methods can I use to measure migraine intensity?</div>', unsafe_allow_html=True)
-
-    #space
-    st.write('###')
 
     #number of abstracts
     slider_values = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
@@ -183,11 +174,12 @@ def home_page():
 
                 #full text input
                 #full_text_input = f'''Based on the following abstracts, {text_input} \n\n Abstracts: {abstracts_in_sequence}'''
-                full_text_input = f'''You are a highly knowledgeable lecturer specializing in central nervous system, brain and neurodegenerative diseases. Your role is to provide detailed, accurate, and evidence-based explanations to answer the following question: {text_input}.
+                full_text_input = f'''You are a lecturer specializing in central nervous system, brain and neurodegenerative diseases. Your role is to provide detailed, accurate, and evidence-based explanations to answer the following question: {text_input}.
                                     Analyze the data provided in the abtracts bellow and synthesize the information into a clear and concise explanation to answer the question. Your responses must:
-                                    1. Explain concepts in a way suitable for a professional audience, such as researchers, or health practitioners, while remaining approachable for non-experts if necessary.
+                                    1. Explain concepts in a way suitable for a professional audience, such as researchers, or health practitioners, while remaining approachable for non-experts if necessary. You don't give your opinion.
                                     2. Use medical terminology appropriately, but ensure definitions or explanations are provided for complex terms.
                                     3. Provide references to the abtract number into brackets after each corresponding sentences.
+                                    4. Organize responses into structured formats when appropriate (e.g., bullet points, numbered lists).
                                     If the input data is unclear or insufficient, request clarification or more context to ensure an accurate response.
                                     Here are the abstract data: {abstracts_in_sequence}'''
 
