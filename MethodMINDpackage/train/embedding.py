@@ -114,10 +114,10 @@ if __name__=='__main__':
     else:
         print("No collection")
     # Store embeddings in Milvus
-    #store_chunk_embeddings(client, collection_name) # chunk embeddings
-    store_abstracts_embeddings(client, collection_name) # abstract embeddings
+    # store_chunk_embeddings(client, collection_name) # chunk embeddings
+    # store_abstracts_embeddings(client, collection_name) # abstract embeddings
 
-    row_count = client.get_collection_stats(collection_name=collection_name)['row_count']
-    print(f"\n {database_name} database as {row_count} in collection {collection_name}")
+    # row_count = client.get_collection_stats(collection_name=collection_name)['row_count']
+    # print(f"\n {database_name} database as {row_count} in collection {collection_name}")
 
     disconnect_client(client, collection_name="MethodVectors")

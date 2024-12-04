@@ -10,7 +10,6 @@ torch
 transformers
 google-generativeai
 streamlit
-transformers
 pymilvus
 langchain-community
 sentencepiece

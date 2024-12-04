@@ -54,4 +54,4 @@ def chunking(df = None, chunk_size=100, chunk_overlap=20):
 if __name__=='__main__':
     pass
     # Test
-    print(chunking(df=get_pubmed_data(), chunk_size=100, chunk_overlap=20))
+    # print(chunking(df=get_pubmed_data(), chunk_size=100, chunk_overlap=20))

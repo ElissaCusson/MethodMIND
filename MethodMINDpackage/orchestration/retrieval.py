@@ -1,15 +1,10 @@
 import google.generativeai as genai
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import Document
 from transformers import AutoModel, AutoTokenizer
-import google.generativeai as genai
-import torch
 from MethodMINDpackage.params import GEMINI_API_KEY, PUBMED_API_KEY
 from pymilvus import Collection
-from MethodMINDpackage.train.database import connectDB_alias, disconnect_alias, connectload, disconnect_client
+from MethodMINDpackage.train.database import connectDB_alias, disconnect_alias
 import requests
 import xml.etree.ElementTree as ET
-from collections import defaultdict
 
 def user_input_enhancing(user_input):
     """
@@ -53,7 +48,7 @@ def test_embedding(query):
     embedding = output.last_hidden_state.mean(dim=1).detach().squeeze().numpy()
     return embedding
 
-def search_similarity(query, k=3):
+def search_similarity(query, k=30):
     """Takes raw text (base query) and returns a nested list [data: ["['id: ..., distance: ..., entity: {}', ...]], True]"""
     if query is None or not query.strip():
         return [None, False, "Query is required."]
@@ -77,42 +72,6 @@ def search_similarity(query, k=3):
     )
     disconnect_alias(client_alias)
     return [results, True]
-
-def query_by_id_client(query_id=None):
-    """
-    Retrieve metadata and vector data for a specific ID from the collection.
-
-    Args:
-        client (MilvusClient): Milvus client connection.
-        collection_name (str): Name of the collection to query.
-        query_id (int): The ID to search for.
-
-    Returns:
-        list: Query results containing matched metadata and vector data.
-    """
-    client,collection_name=connectload()
-    if query_id is None:
-        print("Query ID is required.")
-        disconnect_client(client, collection_name="MethodVectors")
-        return
-
-    # Build filter expression for ID
-    filter_expression = f"id == {query_id}"
-
-    # Perform query
-    try:
-        results = client.query(
-            collection_name=collection_name,
-            expr=filter_expression,  # Filter by ID
-            output_fields=["embedding", "title", "doi", "keywords", "full_text_link", "publication_date"]  # Specify fields to retrieve
-        )
-        print(f"Query completed. Retrieved {len(results)} results.")
-        disconnect_client(client, collection_name="MethodVectors")
-        return results
-    except Exception as e:
-        print(f"An error occurred during query: {e}")
-        disconnect_client(client, collection_name="MethodVectors")
-        return None
 
 def query_by_id(set_query_ids=None):
     """
@@ -211,26 +170,8 @@ def handle_multiple_similarities(best_matches):
     """ Gets a list of the most similar chunks and returns a set of abstract IDs"""
     return set([match.id for match in best_matches])
 
-def handle_multiple_metadata(list_metadata):
-    """ Gets a list of metadata and returns a dict with the metadata grouped by category"""
-    ordered_metadata = defaultdict(list)
-    for metadata in list_metadata:
-        ordered_metadata['id'].append(metadata[0]['id'])
-        ordered_metadata['title'].append(metadata[0]['title'])
-        ordered_metadata['doi'].append(metadata[0]['doi'])
-        ordered_metadata['keywords'].append(metadata[0]['keywords'])
-        ordered_metadata['full_text_link'].append(metadata[0]['full_text_link'])
-        ordered_metadata['publication_date'].append(metadata[0]['publication_date'])
-    return ordered_metadata
-
-
 if __name__=='__main__':
     pass
-    ##############
-
-    # Input enhanced Test
-    # user_query = "Which methods can I use to measure tremor decrease and gait improvement in Parkinson patients receiving deep brain stimulation?"
-    # embedded_query = user_input_enhancing(user_query)
 
     ########### MVP TEST
     #user_query = ''
@@ -248,11 +189,6 @@ if __name__=='__main__':
 
     # # query by id tests:
     ids=query_by_id(set_query_ids=multiple_similarities)
-    print(ids)
+    # print(ids)
 
-    # dois = set(handle_multiple_metadata(ids[0])['doi'])
-    # print(len(dois))
-    # # # get_abstract_by_doi tests:
-    # print(get_abstract_by_doi([None]))
-    # print(get_abstract_by_doi(['10.1007/s00296potatoe-011-2267-2']))
     print(get_abstract_by_doi(metadata_list = ids[0]))

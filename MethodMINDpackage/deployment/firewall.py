@@ -10,8 +10,6 @@ def firewall_all_keywords(text_input):
     split_items = [item.strip() for sublist in key_words for item in sublist.split(',')]
     return any(item.lower() in text_input.lower() for item in split_items)
 
-
-
 #retrieve keywords for firewall, haven't tested it yet
 def retrieve_all_keywords(client, collection_name="MethodVectors"):
     """
