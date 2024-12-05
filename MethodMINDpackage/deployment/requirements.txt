@@ -1,3 +1,1 @@
-#run pip install -r requirements-dev.txt
 git+https://github.com/ElissaCusson/MethodMIND
-
