@@ -88,10 +88,11 @@ def home_page():
     st.markdown("""
         <style>
             .container-border {
-                border: 2px solid #4CAF50; /* Green border */
+                border: 2px solid #D56C00; /* Dark orange border */
                 padding: 10px;
                 border-radius: 10px;
                 margin-bottom: 20px;
+                background-color: white; /* White background */
             }
             .container-border p {
                 font-size: 16px;
@@ -102,15 +103,15 @@ def home_page():
 
     # First column with a container and border
     with columns[0]:
-        st.markdown('<div class="container-border">Which methods can I use to measure gait improvement in Parkinson patients receiving deep brain stimulation?</div>', unsafe_allow_html=True)
+        st.markdown('''<div class="container-border">Which methods can I use to measure gait improvement in Parkinson patients receiving deep brain stimulation?</div>''', unsafe_allow_html=True)
 
     # Second column with a container and border
     with columns[1]:
-        st.markdown('<div class="container-border">Which methods can I use to measure migraine intensity?</div>', unsafe_allow_html=True)
+        st.markdown('''<div class="container-border">How can I assess cognition in Alzheimer's patients treated with anti-amyloid drugs?</div>''', unsafe_allow_html=True)
 
     #number of abstracts
-    slider_values = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-    number_of_abstracts = st.select_slider('Select a number of abstracts to return:', options=slider_values, value=10)
+    slider_values = [5, 6, 7, 8, 9, 10, 11, 12]
+    number_of_abstracts = st.select_slider('Select a number of abstracts to return:', options=slider_values, value=9)
 
     #request
     text_input = st.text_area('Type your request here:')
@@ -248,8 +249,8 @@ def home_page():
             # Generate the HTML for multiple abstracts
             abstracts_html = "".join([
                 f'''<strong>{index + 1}. {abstract["title"]}</strong>
-                <span style="font-style: italic; color: #aaa;">({abstract["date"]})</span>:
-                <a href="{abstract["link"]}" target="_blank" style="color: orange; text-decoration: none; word-wrap: break-word;">{abstract["link"]}</a>
+                <span style="font-style: italic; color: #FF9900; font-weight: bold;">({abstract["date"]})</span>
+                <a href="{abstract["link"]}" target="_blank" style="color: blue; text-decoration: none; word-wrap: break-word;">{abstract["link"]}</a>
                 <br><br>'''
                 for index, abstract in enumerate(abstracts_list)
             ])
@@ -259,6 +260,25 @@ def home_page():
             #displaying abstracts
             st.markdown('### Abstracts:')
             st.markdown(f"""<div style="border: 2px solid gray; padding: 10px; border-radius: 5px;">{abstracts_html}</div>""", unsafe_allow_html=True)
+
+            #displaying dataflow diagram. (delete after demo)
+            st.markdown('')
+            st.markdown('')
+            st.markdown('')
+            st.markdown('')
+            st.markdown('')
+            data_flow_path = "MethodMINDpackage/deployment/images/WholeProcess.jpg"
+            try:
+                # Try to open the image
+                data_flow = Image.open(data_flow_path)
+                st.image(data_flow)
+                st.markdown('')
+                st.markdown('')
+                st.markdown('')
+            except Exception:
+                st.markdown('')
+
+
 
         #if request is outside of scope
         elif stopped_by_firewall:
@@ -405,7 +425,7 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''''')
-            st.markdown('''### Elissa Cusson, CEO & Programmer''')
+            st.markdown('''### Elissa Cusson, Project Lead & Programmer''')
             st.markdown('''With an MSc in neuroscience and extensive experience as a consultant, I specialize in leveraging AI and machine learning to optimize market access, evidence value, and scientific research in healthcare. Passionate about advancing innovation, I apply my expertise to transform healthcare processes, making them more efficient and impactful. Outside of my professional work, I enjoy climbing and mountaineering, exploring the great outdoors and challenging myself with new summits.''')
 
 
@@ -421,7 +441,7 @@ def team_page():
         with col2:
             st.markdown('''''')
             st.markdown('''''')
-            st.markdown('''### Elissa Cusson, CEO & Programmer''')
+            st.markdown('''### Elissa Cusson, Project Lead & Programmer''')
             st.markdown('''With an MSc in neuroscience and extensive experience as a consultant, I specialize in leveraging AI and machine learning to optimize market access, evidence value, and scientific research in healthcare. Passionate about advancing innovation, I apply my expertise to transform healthcare processes, making them more efficient and impactful. Outside of my professional work, I enjoy climbing and mountaineering, exploring the great outdoors and challenging myself with new summits.''')
             st.markdown('''''')
             st.markdown('''''')
@@ -443,7 +463,7 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''''')
-            st.markdown('''### Jean-Marc André, Programmer & System Administrator''')
+            st.markdown('''### Jean-Marc André, System Administrator & Programmer''')
             st.markdown('''With over 20 years leading a cybersecurity company, I’ve shifted my focus to artificial intelligence, specializing in RAG and vector database consultancy for SMEs. A lifelong tech enthusiast, I bring expertise spanning electronics, networks, systems, and the web, while also sharing my passion as a podcast producer. Beyond tech, I explore Europe in a campervan with my wife, embracing diverse cultures, cuisines, and stories to inspire innovation and connection.''')
 
 
@@ -458,7 +478,7 @@ def team_page():
         with col1:
             st.markdown('''''')
             st.markdown('''''')
-            st.markdown('''### Jean-Marc André, Programmer & System Administrator''')
+            st.markdown('''### Jean-Marc André, System Administrator & Programmer''')
             st.markdown('''With over 20 years leading a cybersecurity company, I’ve shifted my focus to artificial intelligence, specializing in RAG and vector database consultancy for SMEs. A lifelong tech enthusiast, I bring expertise spanning electronics, networks, systems, and the web, while also sharing my passion as a podcast producer. Beyond tech, I explore Europe in a campervan with my wife, embracing diverse cultures, cuisines, and stories to inspire innovation and connection.''')
             st.markdown('''''')
             st.markdown('''''')
@@ -489,7 +509,7 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''''')
-            st.markdown('''### Liam Watford Cendra, Programmer & Git Administrator''')
+            st.markdown('''### Liam Watford Cendra, Git Administrator & Programmer''')
             st.markdown('''An ex-ski instructor who spent years traveling from cliff to cliff setting up highlines, walking, and doing tricks on them. He is curious and geeky, with a passion for learning about science, history, and anything that sparks interest. Now working in tech with a focus on machine learning engineering, he brings a keen eye for detail, ensures smooth team coordination, and focuses on the robustness of the development process. He’ll continue to keep things interesting with his great terrible jokes.''')
 
     except Exception:
@@ -504,7 +524,7 @@ def team_page():
         with col2:
             st.markdown('''''')
             st.markdown('''''')
-            st.markdown('''### Liam Watford Cendra, Programmer & Git Administrator''')
+            st.markdown('''### Liam Watford Cendra, Git Administrator & Programmer''')
             st.markdown('''An ex-ski instructor who spent years traveling from cliff to cliff setting up highlines, walking, and doing tricks on them. He is curious and geeky, with a passion for learning about science, history, and anything that sparks interest. Now working in tech with a focus on machine learning engineering, he brings a keen eye for detail, ensures smooth team coordination, and focuses on the robustness of the development process. He’ll continue to keep things interesting with his great terrible jokes.''')
 
     ############################
@@ -528,7 +548,7 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''''')
-            st.markdown('''### Jaime, Programmer & Web Application Designer''')
+            st.markdown('''### Jaime, Web Application Designer & Programmer''')
             st.markdown('''JAIME TEXT''')
 
     except Exception:
@@ -538,7 +558,7 @@ def team_page():
         with col1:
             st.markdown('''''')
             st.markdown('''''')
-            st.markdown('''### Jaime, Programmer & Web Application Designer''')
+            st.markdown('''### Jaime, Web Application Designer & Programmer''')
             st.markdown('''JAIME TEXT''')
             st.markdown('''''')
             st.markdown('''''')
@@ -622,7 +642,9 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.sidebar.title("Menu")
+
+# st.sidebar.title("Menu")
+st.sidebar.markdown('<h1 style="color: #D56C00; font-weight: bold; text-align: center;">Menu</h1>', unsafe_allow_html=True)
 
 if 'menu_open' not in st.session_state:
     st.session_state.menu_open = False
