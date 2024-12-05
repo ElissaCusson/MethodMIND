@@ -128,6 +128,7 @@ def home_page():
             progress_bar = st.empty()
             progress_bar.progress(0)
             progress_text = st.empty()
+            whole_progress = st.empty()
 
             #verifying each step
             done_processing = True
@@ -138,6 +139,9 @@ def home_page():
 
             #here we do the task
             progress_text.text('Validating input...🤔')
+            image_path = "MethodMINDpackage/deployment/images/WholeProcess.jpg"
+            progress_image = Image.open(image_path)
+            whole_progress.image(progress_image)
 
             #new firewall
             is_valid = firewall_all_keywords(text_input)
@@ -214,6 +218,7 @@ def home_page():
 
                 #full llm
                 output = llm_gemini_response_generation(full_text_input)
+                whole_progress.empty()
 
             else:
                 #in case there are other types of errors
@@ -308,6 +313,8 @@ def home_page():
             <strong>MethodMIND can make mistakes. Please check important information carefully.</strong>
         </p>
     """, unsafe_allow_html=True)
+
+
 
 #                                                    DISCLAIMER
 
@@ -549,7 +556,7 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''### Jaime, Web Application Designer & Programmer''')
-            st.markdown('''JAIME TEXT''')
+            st.markdown('''Just your random guy here''')
 
     except Exception:
         # If file not found, display a placeholder message
@@ -559,7 +566,7 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''### Jaime, Web Application Designer & Programmer''')
-            st.markdown('''JAIME TEXT''')
+            st.markdown('''Just your random guy here''')
             st.markdown('''''')
             st.markdown('''''')
         with col2:
@@ -663,13 +670,17 @@ if st.session_state.menu_open:
 else:
     page = st.session_state.selected_page  # Keep the current page when the menu is closed
 
-st.sidebar.write('#')
-st.sidebar.write('#')
-st.sidebar.write('#')
-st.sidebar.write('#')
+    st.sidebar.write('#')
+    st.sidebar.write('#')
+    st.sidebar.write('#')
+    st.sidebar.write('#')
 
 image_path_transparent = "MethodMINDpackage/deployment/images/LogoTransparent.png"
 image = Image.open(image_path_transparent)
+st.sidebar.image(image, use_container_width=True)
+
+image_path_qr = "MethodMINDpackage/deployment/images/qr.png"
+image = Image.open(image_path_qr)
 st.sidebar.image(image, use_container_width=True)
 
 if page == "Home":
