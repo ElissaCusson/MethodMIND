@@ -299,42 +299,6 @@ Large Language Models (LLMs): Enhance the tool’s ability to provide comprehens
     st.markdown('## Our Vision')
     st.markdown('''At MethodMIND, we believe in unlocking the potential of cutting-edge AI to advance science. By streamlining the process of hypothesis testing and methodology selection, we aim to empower the global research community to achieve breakthroughs faster and more efficiently.''')
 
-    st.markdown('## The Team')
-
-    image_ecu_path = "MethodMINDpackage/deployment/images/Elissa.jpg"
-    try:
-        # Try to open the image
-        image_ecu = Image.open(image_ecu_path)
-        st.columns(3)[1].image(image_ecu)
-    except Exception:
-        # If file not found, display a placeholder message
-        st.columns(3)[1].write('Image not found or cannot be opened.')
-    st.markdown('''### Elissa Cusson, CEO & Programmer''')
-    st.markdown('''With an MSc in neuroscience and extensive experience as a consultant, I specialize in leveraging AI and machine learning to optimize market access, evidence value, and scientific research in healthcare. Passionate about advancing innovation, I apply my expertise to transform healthcare processes, making them more efficient and impactful. Outside of my professional work, I enjoy climbing and mountaineering, exploring the great outdoors and challenging myself with new summits.''')
-
-    image_jma_path = "MethodMINDpackage/deployment/images/JeanMarc.JPG"
-    try:
-        # Try to open the image
-        image_jma = Image.open(image_jma_path)
-        st.columns(3)[1].image(image_jma)
-    except Exception:
-        # If file not found, display a placeholder message
-        st.columns(3)[1].write('Image not found or cannot be opened.')
-    st.markdown('''### Jean-Marc André, Programmer & System Administrator''')
-    st.markdown('''With over 20 years leading a cybersecurity company, I’ve shifted my focus to artificial intelligence, specializing in RAG and vector database consultancy for SMEs. A lifelong tech enthusiast, I bring expertise spanning electronics, networks, systems, and the web, while also sharing my passion as a podcast producer. Beyond tech, I explore Europe in a campervan with my wife, embracing diverse cultures, cuisines, and stories to inspire innovation and connection.''')
-
-    image_lwc_path = "MethodMINDpackage/deployment/images/Liam.jpg"
-    try:
-        # Try to open the image
-        image_lwc = Image.open(image_lwc_path)
-        st.columns(3)[1].image(image_lwc)
-    except Exception:
-        # If file not found, display a placeholder message
-        st.columns(3)[1].write('Image not found or cannot be opened.')
-    st.markdown('''### Liam , Programmer & Git Administrator''')
-    st.markdown('''An ex-ski instructor who spent years traveling from cliff to cliff setting up highlines, walking, and doing tricks on them. He is curious and geeky, with a passion for learning about science, history, and anything that sparks interest. Now working in tech with a focus on machine learning engineering, he brings a keen eye for detail, ensures smooth team coordination, and focuses on the robustness of the development process. He’ll continue to keep things interesting with his great terrible jokes.''')
-    st.markdown('''### Jaime, Programmer & Web Application Designer''')
-
     st.markdown('''
         ## Credits
 
@@ -350,11 +314,119 @@ Large Language Models (LLMs): Enhance the tool’s ability to provide comprehens
     ''')
 
 
+
+def team_page():
+    st.markdown('## The Team')
+
+    ############################
+    ### Elissa
+    ############################
+
+    image_ecu_path = "MethodMINDpackage/deployment/images/Elissa.jpg"
+    try:
+        # Try to open the image
+        image_ecu = Image.open(image_ecu_path)
+        col1, col2 = st.columns([1, 2])  # Set the first column smaller than the second
+        with col1:
+            st.image(image_ecu)
+        with col2:
+            col2.markdown(
+                f"""
+                <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                    <h3>Elissa Cusson, CEO & Programmer</h3>
+                    <p>With an MSc in neuroscience and extensive experience as a consultant, I specialize in leveraging AI and machine learning to optimize market access, evidence value, and scientific research in healthcare. Passionate about advancing innovation, I apply my expertise to transform healthcare processes, making them more efficient and impactful. Outside of my professional work, I enjoy climbing and mountaineering, exploring the great outdoors and challenging myself with new summits.</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+        # st.columns(3)[1].image(image_ecu)
+    except Exception:
+        # If file not found, display a placeholder message
+        col1, col2 = st.columns([1, 2])
+        with col1:
+            st.columns(3)[1].write('Image not found or cannot be opened.')
+        with col2:
+            col2.markdown(
+                f"""
+                <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                    <h3>Elissa Cusson, CEO & Programmer</h3>
+                    <p>With an MSc in neuroscience and extensive experience as a consultant, I specialize in leveraging AI and machine learning to optimize market access, evidence value, and scientific research in healthcare. Passionate about advancing innovation, I apply my expertise to transform healthcare processes, making them more efficient and impactful. Outside of my professional work, I enjoy climbing and mountaineering, exploring the great outdoors and challenging myself with new summits.</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+    # with col2:
+    #     st.markdown('''### Elissa Cusson, CEO & Programmer''')
+    #     st.markdown('''With an MSc in neuroscience and extensive experience as a consultant, I specialize in leveraging AI and machine learning to optimize market access, evidence value, and scientific research in healthcare. Passionate about advancing innovation, I apply my expertise to transform healthcare processes, making them more efficient and impactful. Outside of my professional work, I enjoy climbing and mountaineering, exploring the great outdoors and challenging myself with new summits.''')
+
+
+    ############################
+    ### Jean-marc
+    ############################
+
+    image_jma_path = "MethodMINDpackage/deployment/images/JeanMarc.JPG"
+    try:
+        # Try to open the image
+        image_jma = Image.open(image_jma_path)
+        col1, col2 = st.columns([2, 1])  # Set the second column smaller than the second
+        with col2:
+            st.image(image_jma)
+    except Exception:
+        # If file not found, display a placeholder message
+        col1, col2 = st.columns([2, 1])
+        with col2:
+            st.columns(3)[1].write('Image not found or cannot be opened.')
+
+    with col1:
+        st.markdown('''### Jean-Marc André, Programmer & System Administrator''')
+        st.markdown('''With over 20 years leading a cybersecurity company, I’ve shifted my focus to artificial intelligence, specializing in RAG and vector database consultancy for SMEs. A lifelong tech enthusiast, I bring expertise spanning electronics, networks, systems, and the web, while also sharing my passion as a podcast producer. Beyond tech, I explore Europe in a campervan with my wife, embracing diverse cultures, cuisines, and stories to inspire innovation and connection.''')
+
+    ############################
+    ### Liam
+    ############################
+
+    image_lwc_path = "MethodMINDpackage/deployment/images/Liam.jpg"
+    try:
+        # Try to open the image
+        image_lwc = Image.open(image_lwc_path)
+        col1, col2 = st.columns([1, 2])  # Set the first column smaller than the second
+        with col1:
+            st.image(image_lwc)
+    except Exception:
+        # If file not found, display a placeholder message
+        col1, col2 = st.columns([1, 2])
+        with col1:
+            st.columns(3)[1].write('Image not found or cannot be opened.')
+    with col2:
+        st.markdown('''### Liam , Programmer & Git Administrator''')
+        st.markdown('''An ex-ski instructor who spent years traveling from cliff to cliff setting up highlines, walking, and doing tricks on them. He is curious and geeky, with a passion for learning about science, history, and anything that sparks interest. Now working in tech with a focus on machine learning engineering, he brings a keen eye for detail, ensures smooth team coordination, and focuses on the robustness of the development process. He’ll continue to keep things interesting with his great terrible jokes.''')
+
+    ############################
+    ### Jaime
+    ############################
+
+    # image_jpa_path = "MethodMINDpackage/deployment/images/jpa.jpg"
+    # try:
+    #     # Try to open the image
+    #     image_jpa = Image.open(image_jpa_path)
+    #     col1, col2 = st.columns([2, 1])  # Set the second column smaller than the second
+    #     with col2:
+    #         st.image(image_jpa)
+    # except Exception:
+    #     # If file not found, display a placeholder message
+    #     col1, col2 = st.columns([2, 1])
+    #     with col2:
+    #         st.columns(3)[1].write('Image not found or cannot be opened.')
+
+    with col1:
+        st.markdown('''### Jaime, Programmer & Web Application Designer''')
+
+
 #                                                    NAVIGATION
 
 #navigation sidebar (left column)
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Select a page", ["Home", "Disclaimer", "About"])
+page = st.sidebar.radio("Select a page", ["Home", "Disclaimer", "About", "Team"])
 
 if page == "Home":
     home_page()
@@ -362,3 +434,5 @@ elif page == "Disclaimer":
     disclaimer_page()
 elif page == "About":
     about_page()
+elif page == "Team":
+    team_page()
