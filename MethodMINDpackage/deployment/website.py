@@ -312,7 +312,7 @@ Large Language Models (LLMs): Enhance the tool’s ability to provide comprehens
     st.markdown('''### Elissa Cusson, CEO & Programmer''')
     st.markdown('''With an MSc in neuroscience and extensive experience as a consultant, I specialize in leveraging AI and machine learning to optimize market access, evidence value, and scientific research in healthcare. Passionate about advancing innovation, I apply my expertise to transform healthcare processes, making them more efficient and impactful. Outside of my professional work, I enjoy climbing and mountaineering, exploring the great outdoors and challenging myself with new summits.''')
 
-    image_jma_path = "MethodMINDpackage/deployment/images/JeanMarc.jpg"
+    image_jma_path = "MethodMINDpackage/deployment/images/JeanMarc.JPG"
     try:
         # Try to open the image
         image_jma = Image.open(image_jma_path)
