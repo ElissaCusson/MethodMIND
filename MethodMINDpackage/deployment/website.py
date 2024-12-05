@@ -318,6 +318,14 @@ def about_page():
     #about page
 
     st.title('About MethodMIND')
+    st.markdown('''## MethodMIND data flow:''')
+    data_flow_path = "MethodMINDpackage/deployment/images/WholeProcess.jpg"
+    try:
+        # Try to open the image
+        data_flow = Image.open(data_flow_path)
+        st.image(data_flow)
+    except Exception:
+        st.markdown('Image not found')
     st.markdown('''## What is MethodMIND?''')
     st.markdown('''MethodMIND is an advanced research tool designed to empower scientists, researchers, and healthcare professionals by providing tailored recommendations for experimental methodologies. It bridges the gap between complex scientific queries and actionable insights, helping users identify the best methods for their research needs.''')
     st.markdown('''## Why is MethodMIND Important?''')
@@ -346,10 +354,35 @@ def about_page():
 
     ''')
 
-
+#                                                      TEAM
 
 def team_page():
-    st.markdown('## The Team')
+    joking_image_path = "MethodMINDpackage/deployment/images/20241205_110941.jpg"
+    try:
+        col1, col2 = st.columns([1, 2])  # Set the first column smaller than the second
+        with col2:
+            # Try to open the image
+            joking_image = Image.open(joking_image_path)
+            st.image(joking_image, width=900)
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+        with col1:
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('## The Team')
+
+    except Exception:
+        st.markdown('## The Team')
 
     ############################
     ### Elissa
@@ -361,37 +394,37 @@ def team_page():
         image_ecu = Image.open(image_ecu_path)
         col1, col2 = st.columns([1, 2])  # Set the first column smaller than the second
         with col1:
+            st.markdown('''''')
+            st.markdown('''''')
             st.image(image_ecu)
         with col2:
-            col2.markdown(
-                f"""
-                <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
-                    <h3>Elissa Cusson, CEO & Programmer</h3>
-                    <p>With an MSc in neuroscience and extensive experience as a consultant, I specialize in leveraging AI and machine learning to optimize market access, evidence value, and scientific research in healthcare. Passionate about advancing innovation, I apply my expertise to transform healthcare processes, making them more efficient and impactful. Outside of my professional work, I enjoy climbing and mountaineering, exploring the great outdoors and challenging myself with new summits.</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-        # st.columns(3)[1].image(image_ecu)
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''### Elissa Cusson, CEO & Programmer''')
+            st.markdown('''With an MSc in neuroscience and extensive experience as a consultant, I specialize in leveraging AI and machine learning to optimize market access, evidence value, and scientific research in healthcare. Passionate about advancing innovation, I apply my expertise to transform healthcare processes, making them more efficient and impactful. Outside of my professional work, I enjoy climbing and mountaineering, exploring the great outdoors and challenging myself with new summits.''')
+
+
     except Exception:
         # If file not found, display a placeholder message
         col1, col2 = st.columns([1, 2])
         with col1:
+            st.markdown('''''')
+            st.markdown('''''')
             st.columns(3)[1].write('Image not found or cannot be opened.')
+            st.markdown('''''')
+            st.markdown('''''')
         with col2:
-            col2.markdown(
-                f"""
-                <div style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
-                    <h3>Elissa Cusson, CEO & Programmer</h3>
-                    <p>With an MSc in neuroscience and extensive experience as a consultant, I specialize in leveraging AI and machine learning to optimize market access, evidence value, and scientific research in healthcare. Passionate about advancing innovation, I apply my expertise to transform healthcare processes, making them more efficient and impactful. Outside of my professional work, I enjoy climbing and mountaineering, exploring the great outdoors and challenging myself with new summits.</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-    # with col2:
-    #     st.markdown('''### Elissa Cusson, CEO & Programmer''')
-    #     st.markdown('''With an MSc in neuroscience and extensive experience as a consultant, I specialize in leveraging AI and machine learning to optimize market access, evidence value, and scientific research in healthcare. Passionate about advancing innovation, I apply my expertise to transform healthcare processes, making them more efficient and impactful. Outside of my professional work, I enjoy climbing and mountaineering, exploring the great outdoors and challenging myself with new summits.''')
-
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''### Elissa Cusson, CEO & Programmer''')
+            st.markdown('''With an MSc in neuroscience and extensive experience as a consultant, I specialize in leveraging AI and machine learning to optimize market access, evidence value, and scientific research in healthcare. Passionate about advancing innovation, I apply my expertise to transform healthcare processes, making them more efficient and impactful. Outside of my professional work, I enjoy climbing and mountaineering, exploring the great outdoors and challenging myself with new summits.''')
+            st.markdown('''''')
+            st.markdown('''''')
 
     ############################
     ### Jean-marc
@@ -402,17 +435,40 @@ def team_page():
         # Try to open the image
         image_jma = Image.open(image_jma_path)
         col1, col2 = st.columns([2, 1])  # Set the second column smaller than the second
+        with col1:
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''### Jean-Marc André, Programmer & System Administrator''')
+            st.markdown('''With over 20 years leading a cybersecurity company, I’ve shifted my focus to artificial intelligence, specializing in RAG and vector database consultancy for SMEs. A lifelong tech enthusiast, I bring expertise spanning electronics, networks, systems, and the web, while also sharing my passion as a podcast producer. Beyond tech, I explore Europe in a campervan with my wife, embracing diverse cultures, cuisines, and stories to inspire innovation and connection.''')
+
+
         with col2:
+            st.markdown('''''')
+            st.markdown('''''')
             st.image(image_jma)
     except Exception:
         # If file not found, display a placeholder message
         col1, col2 = st.columns([2, 1])
-        with col2:
-            st.columns(3)[1].write('Image not found or cannot be opened.')
 
-    with col1:
-        st.markdown('''### Jean-Marc André, Programmer & System Administrator''')
-        st.markdown('''With over 20 years leading a cybersecurity company, I’ve shifted my focus to artificial intelligence, specializing in RAG and vector database consultancy for SMEs. A lifelong tech enthusiast, I bring expertise spanning electronics, networks, systems, and the web, while also sharing my passion as a podcast producer. Beyond tech, I explore Europe in a campervan with my wife, embracing diverse cultures, cuisines, and stories to inspire innovation and connection.''')
+        with col1:
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''### Jean-Marc André, Programmer & System Administrator''')
+            st.markdown('''With over 20 years leading a cybersecurity company, I’ve shifted my focus to artificial intelligence, specializing in RAG and vector database consultancy for SMEs. A lifelong tech enthusiast, I bring expertise spanning electronics, networks, systems, and the web, while also sharing my passion as a podcast producer. Beyond tech, I explore Europe in a campervan with my wife, embracing diverse cultures, cuisines, and stories to inspire innovation and connection.''')
+            st.markdown('''''')
+            st.markdown('''''')
+        with col2:
+            st.markdown('''''')
+            st.markdown('''''')
+            st.columns(3)[1].write('Image not found or cannot be opened.')
+            st.markdown('''''')
+            st.markdown('''''')
+
 
     ############################
     ### Liam
@@ -425,34 +481,73 @@ def team_page():
         col1, col2 = st.columns([1, 2])  # Set the first column smaller than the second
         with col1:
             st.image(image_lwc)
+        with col2:
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''### Liam Watford Cendra, Programmer & Git Administrator''')
+            st.markdown('''An ex-ski instructor who spent years traveling from cliff to cliff setting up highlines, walking, and doing tricks on them. He is curious and geeky, with a passion for learning about science, history, and anything that sparks interest. Now working in tech with a focus on machine learning engineering, he brings a keen eye for detail, ensures smooth team coordination, and focuses on the robustness of the development process. He’ll continue to keep things interesting with his great terrible jokes.''')
+
     except Exception:
         # If file not found, display a placeholder message
         col1, col2 = st.columns([1, 2])
         with col1:
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
             st.columns(3)[1].write('Image not found or cannot be opened.')
-    with col2:
-        st.markdown('''### Liam , Programmer & Git Administrator''')
-        st.markdown('''An ex-ski instructor who spent years traveling from cliff to cliff setting up highlines, walking, and doing tricks on them. He is curious and geeky, with a passion for learning about science, history, and anything that sparks interest. Now working in tech with a focus on machine learning engineering, he brings a keen eye for detail, ensures smooth team coordination, and focuses on the robustness of the development process. He’ll continue to keep things interesting with his great terrible jokes.''')
+        with col2:
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''### Liam Watford Cendra, Programmer & Git Administrator''')
+            st.markdown('''An ex-ski instructor who spent years traveling from cliff to cliff setting up highlines, walking, and doing tricks on them. He is curious and geeky, with a passion for learning about science, history, and anything that sparks interest. Now working in tech with a focus on machine learning engineering, he brings a keen eye for detail, ensures smooth team coordination, and focuses on the robustness of the development process. He’ll continue to keep things interesting with his great terrible jokes.''')
 
     ############################
     ### Jaime
     ############################
 
-    # image_jpa_path = "MethodMINDpackage/deployment/images/jpa.jpg"
-    # try:
-    #     # Try to open the image
-    #     image_jpa = Image.open(image_jpa_path)
-    #     col1, col2 = st.columns([2, 1])  # Set the second column smaller than the second
-    #     with col2:
-    #         st.image(image_jpa)
-    # except Exception:
-    #     # If file not found, display a placeholder message
-    #     col1, col2 = st.columns([2, 1])
-    #     with col2:
-    #         st.columns(3)[1].write('Image not found or cannot be opened.')
+    image_jpa_path = "MethodMINDpackage/deployment/images/jpa.jpg"
+    try:
+        # Try to open the image
+        image_jpa = Image.open(image_jpa_path)
+        col1, col2 = st.columns([2, 1])  # Set the second column smaller than the second
+        with col2:
+            st.markdown('''''')
+            st.markdown('''''')
+            st.image(image_jpa)
+        with col1:
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''### Jaime, Programmer & Web Application Designer''')
+            st.markdown('''JAIME TEXT''')
 
-    with col1:
-        st.markdown('''### Jaime, Programmer & Web Application Designer''')
+    except Exception:
+        # If file not found, display a placeholder message
+        col1, col2 = st.columns([2, 1])
+
+        with col1:
+            st.markdown('''''')
+            st.markdown('''''')
+            st.markdown('''### Jaime, Programmer & Web Application Designer''')
+            st.markdown('''JAIME TEXT''')
+            st.markdown('''''')
+            st.markdown('''''')
+        with col2:
+            st.markdown('''''')
+            st.markdown('''''')
+            st.columns(3)[1].write('Image not found or cannot be opened.')
+            st.markdown('''''')
+            st.markdown('''''')
 
 
 #                                                    NAVIGATION
