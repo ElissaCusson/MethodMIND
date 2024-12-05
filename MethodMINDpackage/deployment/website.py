@@ -8,22 +8,34 @@ from MethodMINDpackage.orchestration.reranking import reranking
 st.set_page_config(layout="wide")
 
 number_of_abstracts_to_search_similarity = 30
+image_path = "MethodMINDpackage/deployment/images/New_Logo.jpg"
 
 #                                                   HOME
 
 def home_page():
     #home page
+    st.markdown(
+    """
+    <style>
+    #root > div:nth-child(1) > div.withScreencast > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 {
+        background-color: #C8D4E0;
+    }
+    #root > div:nth-child(1) > div.withScreencast > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 {
+        color: #11214F;
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
     #displaying logo at the center
 
-    image_path = "MethodMINDpackage/deployment/images/New_Logo.jpg"
-    try:
-        # Try to open the image
-        image = Image.open(image_path)
-        st.columns(3)[1].image(image)
-    except Exception:
-        # If file not found, display a placeholder message
-        st.columns(3)[1].write('Image not found or cannot be opened.')
+    # try:
+    #     # Try to open the image
+    #     image = Image.open(image_path)
+    #     st.columns(3)[1].image(image)
+    # except Exception:
+    #     # If file not found, display a placeholder message
+    #     st.columns(3)[1].write('Image not found or cannot be opened.')
 
     #displaying title at the center
     st.markdown("<h1 style='text-align: center;'>Welcome to MethodMIND</h1>", unsafe_allow_html=True)
@@ -34,17 +46,37 @@ def home_page():
         unsafe_allow_html=True)
 
     #description
+    st.markdown("""
+        <style>
+            .container-border {
+                border: 2px solid #111951;  /* Set border color to #111951 */
+                padding: 20px;
+                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+            .container-border p {
+                font-size: 16px;
+                color: #333;  /* Default text color */
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Your Streamlit app content wrapped in a custom container with the class 'container-border'
     st.subheader('Description:')
-    with st.container(border = True):
-        st.markdown('''
-        Our platform helps researchers like you discover the most relevant and up-to-date methods for studying and treating brain diseases.
-        Simply enter your research question or hypothesis, and our model will search through a vast database of PubMed
-        abstracts, pinpointing studies and methodologies most related to your query.
 
-        Instead of spending hours reading all the different abstracts to find a solution, start by submitting your
-        hypothesis, and let us do the rest!
-        ''')
-
+    # Using the custom container
+    st.markdown("""
+        <div class="container-border">
+            <p>
+                Our platform helps researchers like you discover the most relevant and up-to-date methods for studying and treating brain diseases.
+                Simply enter your research question or hypothesis, and our model will search through a vast database of PubMed
+                abstracts, pinpointing studies and methodologies most related to your query.
+                <br><br>
+                Instead of spending hours reading all the different abstracts to find a solution, start by submitting your
+                hypothesis, and let us do the rest!
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
     #space
     st.write('##')
@@ -319,26 +351,69 @@ def about_page():
 
 #navigation sidebar (left column)
 
+# #not working
+# st.sidebar.markdown("""
+#     <style>
+#         /* Sidebar layout and image positioning */
+#         .sidebar .sidebar-content {
+#             position: relative;  /* Make the sidebar container relative for absolute positioning */
+#             padding-bottom: 200px !important;  /* Add padding to avoid overlap of sidebar items */
+#         }
+
+#         /* Styling the image to appear at the bottom */
+#         .sidebar .sidebar-content img {
+#             position: absolute;
+#             bottom: 10px;  /* Set distance from bottom of the sidebar */
+#             left: 50%;
+#             transform: translateX(-50%);
+#             width: 80% !important;  /* Make image size relative to sidebar width */
+#             max-width: 200px !important;  /* Limit max size */
+#         }
+
+#         /* Make sure the sidebar menu is properly styled */
+#         .sidebar .sidebar-content .stButton button {
+#             font-size: 18px !important;  /* Adjust button text size */
+#             padding: 10px !important;  /* Adjust button padding */
+#         }
+
+#         /* Increase the size of the menu title */
+#         .sidebar h1 {
+#             font-size: 30px !important;
+#         }
+
+#         /* Increase the size of radio button options */
+#         .sidebar .stRadio label {
+#             font-size: 20px !important;
+#         }
+
+#         /* Style for the menu toggle button */
+#         .menu-icon {
+#             cursor: pointer;
+#             font-size: 30px;
+#             padding: 10px;
+#             display: block;
+#             color: black;
+#         }
+
+#         .menu-icon:hover {
+#             color: #007bff;
+#         }
+#     </style>
+# """, unsafe_allow_html=True)
+
 st.markdown("""
     <style>
-        .sidebar .sidebar-content {
-            padding-top: 10px;
+        /* Apply a diagonal gradient background from top-left light blue to bottom-right dark blue */
+        #root > div:nth-child(1) > div.withScreencast > div > div > section.stSidebar.st-emotion-cache-1wqrzgl.eczjsme18 > div.st-emotion-cache-6qob1r.eczjsme11 {
+            background: linear-gradient(to bottom right, #5671AD, #111951);  /* Gradient from top-left light blue to bottom-right dark blue */
         }
-        /* Style for the hamburger menu icon */
-        .menu-icon {
-            cursor: pointer;
-            font-size: 30px;
-            padding: 10px;
-            display: block;
-            color: black;
-        }
-        .menu-icon:hover {
-            color: #007bff;
-        }
-        .sidebar .sidebar-content .stButton button {
-            font-size: 24px;
-            padding: 15px;
-            width: 100%;
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+    <style>
+    #root > div:nth-child(1) > div.withScreencast > div > div > section.stSidebar.st-emotion-cache-vmpjyt.eczjsme18 > div.st-emotion-cache-6qob1r.eczjsme11 {
+        background: linear-gradient(to bottom right, #5671AD, #111951);  /* Gradient from top-left light blue to bottom-right dark blue */
         }
     </style>
 """, unsafe_allow_html=True)
@@ -362,6 +437,14 @@ if st.session_state.menu_open:
 else:
     page = st.session_state.selected_page  # Keep the current page when the menu is closed
 
+st.sidebar.write('#')
+st.sidebar.write('#')
+st.sidebar.write('#')
+st.sidebar.write('#')
+
+image_path_transparent = "MethodMINDpackage/deployment/images/LogoTransparent.png"
+image = Image.open(image_path_transparent)
+st.sidebar.image(image, use_container_width=True)
 
 if page == "Home":
     home_page()
