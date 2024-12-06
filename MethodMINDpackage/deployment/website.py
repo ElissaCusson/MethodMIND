@@ -568,7 +568,7 @@ def team_page():
     ### Jaime
     ############################
 
-    image_jpa_path = "MethodMINDpackage/deployment/images/jpa.jpg"
+    image_jpa_path = "MethodMINDpackage/deployment/images/Jaime.jpeg"
     try:
         # Try to open the image
         image_jpa = Image.open(image_jpa_path)
