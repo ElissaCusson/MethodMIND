@@ -73,7 +73,7 @@ def home_page():
                 <br><br>
                 2. Money. We don’t train a new AI model. Yet can always use the latest, most advanced ones.
                 <br><br>
-                3. Trust. We give AI scientific papers as context to generate an answer from, and we give you the original references for fact checking.
+                3. Trust. We give scientific papers to the AI text generator, and you also get the original references for fact checking.
             </p>
         </div>
     """, unsafe_allow_html=True)
