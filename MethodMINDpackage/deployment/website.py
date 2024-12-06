@@ -61,6 +61,25 @@ def home_page():
         </style>
     """, unsafe_allow_html=True)
 
+
+    # Your Streamlit app content wrapped in a custom container with the class 'container-border'
+    st.subheader('Why MethodMIND?')
+
+    # Using the custom container
+    st.markdown("""
+        <div class="container-border">
+            <p>
+                1. Time. We save time by using AI.
+                <br><br>
+                2. Money. We don’t train a new AI model. Yet can always use the latest, most advanced ones.
+                <br><br>
+                3. Trust. We give AI scientific papers as context to generate an answer from, and we give you the original references for fact checking.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+
+
     # Your Streamlit app content wrapped in a custom container with the class 'container-border'
     st.subheader('Description:')
 
@@ -313,28 +332,32 @@ def home_page():
             st.subheader('The request is outside of the scope of the model.🥺')
             st.subheader('Please try again with another request.🙏')
             #firewall step image
-            whole_progress.image(firewall_image)
+            whole_progress.empty()
+            st.image(firewall_image)
 
         #if stopped at similarity step
         elif stopped_at_similarity:
             progress_text.text('Stopped 🛑')
             st.subheader(similarity[2])
             #firewall step image
-            whole_progress.image(firewall_image)
+            whole_progress.empty()
+            st.image(firewall_image)
 
         #if stopped at query by id step
         elif stopped_at_query_by_id:
             progress_text.text('Stopped 🛑')
             st.subheader(metadata_list[2])
             #firewall step image
-            whole_progress.image(firewall_image)
+            whole_progress.empty()
+            st.image(firewall_image)
 
         #if stopped at abstract by doi
         elif stopped_at_abstract_by_doi:
             progress_text.text('Stopped 🛑')
             st.subheader('stopped at abstract_by_doi')
             #firewall step image
-            whole_progress.image(firewall_image)
+            whole_progress.empty()
+            st.image(firewall_image)
 
     #disclaimer
     #st.caption('MethodMIND can make mistakes. Please check important information')
@@ -562,7 +585,7 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''### Liam Watford Cendra, Git Administrator & Programmer''')
-            st.markdown('''An ex-ski instructor who spent years traveling from cliff to cliff setting up highlines, walking, and doing tricks on them. He is curious and geeky, with a passion for learning about science, history, and anything that sparks interest. Now working in tech with a focus on machine learning engineering, he brings a keen eye for detail, ensures smooth team coordination, and focuses on the robustness of the development process. He’ll continue to keep things interesting with his great terrible jokes.''')
+            st.markdown('''An ex-ski instructor who spends his time traveling from cliff to cliff setting up highlines, walking, and doing tricks on them. He is curious and geeky, with a passion for learning about science, history, and anything that sparks interest. Now working in tech with a focus on machine learning engineering, he brings a keen eye for detail, ensures smooth team coordination, and focuses on the robustness of the development process. He’ll continue to keep things interesting with his great terrible jokes.''')
 
     ############################
     ### Jaime
