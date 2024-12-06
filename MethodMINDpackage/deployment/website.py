@@ -586,7 +586,7 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''### Jaime, Web Application Designer & Programmer''')
-            st.markdown('''Just your random guy here''')
+            st.markdown('''I started studying mathematics in Germany and am now starting to work and learn about AI and data science.''')
 
     except Exception:
         # If file not found, display a placeholder message
@@ -596,7 +596,7 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''### Jaime, Web Application Designer & Programmer''')
-            st.markdown('''Just your random guy here''')
+            st.markdown('''I started studying mathematics in Germany and am now starting to work and learn about AI and data science.''')
             st.markdown('''''')
             st.markdown('''''')
         with col2:
