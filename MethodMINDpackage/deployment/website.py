@@ -153,9 +153,6 @@ def home_page():
             reranking_image = Image.open(reranking_image_path)
             llm_image = Image.open(llm_image_path)
 
-            #firewall step image
-            whole_progress.image(firewall_image)
-
             #new firewall
             is_valid = firewall_all_keywords(text_input)
             if is_valid:
@@ -315,21 +312,29 @@ def home_page():
             progress_text.text('Stopped 🛑')
             st.subheader('The request is outside of the scope of the model.🥺')
             st.subheader('Please try again with another request.🙏')
+            #firewall step image
+            whole_progress.image(firewall_image)
 
         #if stopped at similarity step
         elif stopped_at_similarity:
             progress_text.text('Stopped 🛑')
             st.subheader(similarity[2])
+            #firewall step image
+            whole_progress.image(firewall_image)
 
         #if stopped at query by id step
         elif stopped_at_query_by_id:
             progress_text.text('Stopped 🛑')
             st.subheader(metadata_list[2])
+            #firewall step image
+            whole_progress.image(firewall_image)
 
         #if stopped at abstract by doi
         elif stopped_at_abstract_by_doi:
             progress_text.text('Stopped 🛑')
             st.subheader('stopped at abstract_by_doi')
+            #firewall step image
+            whole_progress.image(firewall_image)
 
     #disclaimer
     #st.caption('MethodMIND can make mistakes. Please check important information')
