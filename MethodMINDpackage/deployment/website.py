@@ -167,8 +167,8 @@ def home_page():
                 whole_progress.image(similarity_image)
 
                 # #enhancing input
-                # text_enhanced = user_input_enhancing(text_input)
-                similarity = search_similarity(text_input, k = number_of_abstracts_to_search_similarity)
+                text_enhanced = user_input_enhancing(text_input)
+                similarity = search_similarity(text_enhanced, k = number_of_abstracts_to_search_similarity)
 
                 #best similarity threshold at 0.88
 
@@ -234,7 +234,7 @@ def home_page():
                 #full_text_input = f'''Based on the following abstracts, {text_input} \n\n Abstracts: {abstracts_in_sequence}'''
                 full_text_input = f'''You are a lecturer specializing in central nervous system, brain and neurodegenerative diseases. Your role is to provide detailed, accurate, and evidence-based explanations to answer the following question: {text_input}.
                                     Analyze the data provided in the abtracts bellow and synthesize the information into a clear and concise explanation to answer the question. Your responses must:
-                                    1. Explain concepts in a way suitable for a professional audience, such as researchers, or health practitioners, while remaining approachable for non-experts if necessary. You don't give your opinion.
+                                    1. Explain concepts in a way suitable for a professional audience, such as researchers, or health practitioners, while remaining approachable for non-experts if necessary. You don't give your opinion on abstract relevance.
                                     2. Use medical terminology appropriately, but ensure definitions or explanations are provided for complex terms.
                                     3. Provide references to the abtract number into brackets after each corresponding sentences.
                                     4. Organize responses into structured formats when appropriate (e.g., bullet points, numbered lists).
@@ -581,7 +581,7 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''### Jaime, Web Application Designer & Programmer''')
-            st.markdown('''Just your random guy here''')
+            st.markdown('''JAIME TEXT''')
 
     except Exception:
         # If file not found, display a placeholder message
@@ -591,7 +591,7 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''### Jaime, Web Application Designer & Programmer''')
-            st.markdown('''Just your random guy here''')
+            st.markdown('''JAIME TEXT''')
             st.markdown('''''')
             st.markdown('''''')
         with col2:
