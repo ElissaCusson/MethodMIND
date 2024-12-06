@@ -139,9 +139,22 @@ def home_page():
 
             #here we do the task
             progress_text.text('Validating input...🤔')
-            image_path = "MethodMINDpackage/deployment/images/WholeProcess.jpg"
-            progress_image = Image.open(image_path)
-            whole_progress.image(progress_image)
+
+            #image paths
+            firewall_image_path = "MethodMINDpackage/deployment/images/WholeProcess_STEP02.jpg"
+            similarity_image_path = "MethodMINDpackage/deployment/images/WholeProcess_STEP05.jpg"
+            retrieval_image_path = "MethodMINDpackage/deployment/images/WholeProcess_STEP06.jpg"
+            reranking_image_path = "MethodMINDpackage/deployment/images/WholeProcess_STEP07.jpg"
+            llm_image_path = "MethodMINDpackage/deployment/images/WholeProcess_STEP09.jpg"
+
+            firewall_image = Image.open(firewall_image_path)
+            similarity_image = Image.open(similarity_image_path)
+            retrieval_image = Image.open(retrieval_image_path)
+            reranking_image = Image.open(reranking_image_path)
+            llm_image = Image.open(llm_image_path)
+
+            #firewall step image
+            whole_progress.image(firewall_image)
 
             #new firewall
             is_valid = firewall_all_keywords(text_input)
@@ -150,9 +163,12 @@ def home_page():
                 progress_text.text('Searching for relevant abstracts...🔍')
                 progress_bar.progress(15)
 
-                #enhancing input
-                text_enhanced = user_input_enhancing(text_input)
-                similarity = search_similarity(text_enhanced, k = number_of_abstracts_to_search_similarity)
+                #similarity step image
+                whole_progress.image(similarity_image)
+
+                # #enhancing input
+                # text_enhanced = user_input_enhancing(text_input)
+                similarity = search_similarity(text_input, k = number_of_abstracts_to_search_similarity)
 
                 #best similarity threshold at 0.88
 
@@ -166,6 +182,9 @@ def home_page():
 
                     progress_text.text('Fetching DOI information...🎣')
                     progress_bar.progress(25)
+
+                    #retrieval step image
+                    whole_progress.image(retrieval_image)
 
                 #important data here
                 metadata_list = query_by_id(ids)
@@ -188,11 +207,17 @@ def home_page():
                     progress_text.text('Reranking relevant abstracts...🔄')
                     progress_bar.progress(55)
 
+                    #reranking step image
+                    whole_progress.image(reranking_image)
+
                 # #reranking
                 reranked = reranking(text_input, abstract_by_doi_list[0], number_of_abstracts)
 
                 progress_text.text('Generating answer...🚀')
                 progress_bar.progress(75)
+
+                #llm step image
+                whole_progress.image(llm_image)
 
                 #final list of dictionaries
                 final_form = reranked
