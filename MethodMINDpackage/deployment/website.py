@@ -609,7 +609,6 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''### Jaime, Web Application Designer & Programmer''')
-            st.markdown('''JAIME TEXT''')
             st.markdown('''I started studying mathematics in Germany and am now starting to work and learn about AI and data science.''')
 
     except Exception:
