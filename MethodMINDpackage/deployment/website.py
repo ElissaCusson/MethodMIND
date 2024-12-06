@@ -167,8 +167,8 @@ def home_page():
                 whole_progress.image(similarity_image)
 
                 # #enhancing input
-                # text_enhanced = user_input_enhancing(text_input)
-                similarity = search_similarity(text_input, k = number_of_abstracts_to_search_similarity)
+                text_enhanced = user_input_enhancing(text_input)
+                similarity = search_similarity(text_enhanced, k = number_of_abstracts_to_search_similarity)
 
                 #best similarity threshold at 0.88
 
