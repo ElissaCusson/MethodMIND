@@ -128,6 +128,7 @@ def home_page():
             progress_bar = st.empty()
             progress_bar.progress(0)
             progress_text = st.empty()
+            whole_progress = st.empty()
 
             #verifying each step
             done_processing = True
@@ -139,6 +140,19 @@ def home_page():
             #here we do the task
             progress_text.text('Validating input...🤔')
 
+            #image paths
+            firewall_image_path = "MethodMINDpackage/deployment/images/WholeProcess_STEP02.jpg"
+            similarity_image_path = "MethodMINDpackage/deployment/images/WholeProcess_STEP05.jpg"
+            retrieval_image_path = "MethodMINDpackage/deployment/images/WholeProcess_STEP06.jpg"
+            reranking_image_path = "MethodMINDpackage/deployment/images/WholeProcess_STEP07.jpg"
+            llm_image_path = "MethodMINDpackage/deployment/images/WholeProcess_STEP09.jpg"
+
+            firewall_image = Image.open(firewall_image_path)
+            similarity_image = Image.open(similarity_image_path)
+            retrieval_image = Image.open(retrieval_image_path)
+            reranking_image = Image.open(reranking_image_path)
+            llm_image = Image.open(llm_image_path)
+
             #new firewall
             is_valid = firewall_all_keywords(text_input)
             if is_valid:
@@ -146,7 +160,10 @@ def home_page():
                 progress_text.text('Searching for relevant abstracts...🔍')
                 progress_bar.progress(15)
 
-                #enhancing input
+                #similarity step image
+                whole_progress.image(similarity_image)
+
+                # #enhancing input
                 text_enhanced = user_input_enhancing(text_input)
                 similarity = search_similarity(text_enhanced, k = number_of_abstracts_to_search_similarity)
 
@@ -162,6 +179,9 @@ def home_page():
 
                     progress_text.text('Fetching DOI information...🎣')
                     progress_bar.progress(25)
+
+                    #retrieval step image
+                    whole_progress.image(retrieval_image)
 
                 #important data here
                 metadata_list = query_by_id(ids)
@@ -184,11 +204,17 @@ def home_page():
                     progress_text.text('Reranking relevant abstracts...🔄')
                     progress_bar.progress(55)
 
+                    #reranking step image
+                    whole_progress.image(reranking_image)
+
                 # #reranking
                 reranked = reranking(text_input, abstract_by_doi_list[0], number_of_abstracts)
 
                 progress_text.text('Generating answer...🚀')
                 progress_bar.progress(75)
+
+                #llm step image
+                whole_progress.image(llm_image)
 
                 #final list of dictionaries
                 final_form = reranked
@@ -214,6 +240,7 @@ def home_page():
 
                 #full llm
                 output = llm_gemini_response_generation(full_text_input)
+                whole_progress.empty()
 
             else:
                 #in case there are other types of errors
@@ -285,21 +312,29 @@ def home_page():
             progress_text.text('Stopped 🛑')
             st.subheader('The request is outside of the scope of the model.🥺')
             st.subheader('Please try again with another request.🙏')
+            #firewall step image
+            whole_progress.image(firewall_image)
 
         #if stopped at similarity step
         elif stopped_at_similarity:
             progress_text.text('Stopped 🛑')
             st.subheader(similarity[2])
+            #firewall step image
+            whole_progress.image(firewall_image)
 
         #if stopped at query by id step
         elif stopped_at_query_by_id:
             progress_text.text('Stopped 🛑')
             st.subheader(metadata_list[2])
+            #firewall step image
+            whole_progress.image(firewall_image)
 
         #if stopped at abstract by doi
         elif stopped_at_abstract_by_doi:
             progress_text.text('Stopped 🛑')
             st.subheader('stopped at abstract_by_doi')
+            #firewall step image
+            whole_progress.image(firewall_image)
 
     #disclaimer
     #st.caption('MethodMIND can make mistakes. Please check important information')
@@ -308,6 +343,8 @@ def home_page():
             <strong>MethodMIND can make mistakes. Please check important information carefully.</strong>
         </p>
     """, unsafe_allow_html=True)
+
+
 
 #                                                    DISCLAIMER
 
@@ -549,7 +586,7 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''### Jaime, Web Application Designer & Programmer''')
-            st.markdown('''JAIME TEXT''')
+            st.markdown('''I started studying mathematics in Germany and am now starting to work and learn about AI and data science.''')
 
     except Exception:
         # If file not found, display a placeholder message
@@ -559,7 +596,7 @@ def team_page():
             st.markdown('''''')
             st.markdown('''''')
             st.markdown('''### Jaime, Web Application Designer & Programmer''')
-            st.markdown('''JAIME TEXT''')
+            st.markdown('''I started studying mathematics in Germany and am now starting to work and learn about AI and data science.''')
             st.markdown('''''')
             st.markdown('''''')
         with col2:
@@ -663,13 +700,17 @@ if st.session_state.menu_open:
 else:
     page = st.session_state.selected_page  # Keep the current page when the menu is closed
 
-st.sidebar.write('#')
-st.sidebar.write('#')
-st.sidebar.write('#')
-st.sidebar.write('#')
+    st.sidebar.write('#')
+    st.sidebar.write('#')
+    st.sidebar.write('#')
+    st.sidebar.write('#')
 
 image_path_transparent = "MethodMINDpackage/deployment/images/LogoTransparent.png"
 image = Image.open(image_path_transparent)
+st.sidebar.image(image, use_container_width=True)
+
+image_path_qr = "MethodMINDpackage/deployment/images/qr.png"
+image = Image.open(image_path_qr)
 st.sidebar.image(image, use_container_width=True)
 
 if page == "Home":
