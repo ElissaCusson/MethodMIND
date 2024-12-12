@@ -62,26 +62,9 @@ def home_page():
     """, unsafe_allow_html=True)
 
 
-    # Your Streamlit app content wrapped in a custom container with the class 'container-border'
-    st.subheader('Why MethodMIND?')
-
-    # Using the custom container
-    st.markdown("""
-        <div class="container-border">
-            <p>
-                1. Time. We save time by using AI.
-                <br><br>
-                2. Money. We don’t train a new AI model. Yet can always use the latest, most advanced ones.
-                <br><br>
-                3. Trust. We give scientific papers to the AI text generator, and you also get the original references for fact checking.
-            </p>
-        </div>
-    """, unsafe_allow_html=True)
-
-
 
     # Your Streamlit app content wrapped in a custom container with the class 'container-border'
-    st.subheader('Description:')
+    st.subheader('Description')
 
     # Using the custom container
     st.markdown("""
@@ -101,7 +84,7 @@ def home_page():
     st.write('##')
 
     #frequently asked questions
-    st.subheader('Example questions:')
+    st.subheader('Example questions')
     columns = st.columns(2)
 
     st.markdown("""
@@ -397,7 +380,20 @@ def disclaimer_page():
 def about_page():
     #about page
 
-    st.title('About MethodMIND')
+    st.title('MethodMIND: The Smart Choice for Innovative Research')
+    #space
+    st.write('##')
+
+    st.markdown('### 1. Save Time with AI')
+    st.markdown('Accelerates your research with cutting-edge AI tools that streamline complex tasks.')
+    st.markdown('### 2. Cost-Effective Solution')
+    st.markdown('Leverages the most advanced AI models without the expense of training or maintaining one.')
+    st.markdown('### 3. Reliable and Transparent')
+    st.markdown('All insights are sourced directly from scientific papers, with original references provided for easy fact-checking.')
+
+    #space
+    st.write('##')
+
     st.markdown('''## MethodMIND data flow:''')
     data_flow_path = "MethodMINDpackage/deployment/images/WholeProcess.jpg"
     try:
@@ -406,10 +402,20 @@ def about_page():
         st.image(data_flow)
     except Exception:
         st.markdown('Image not found')
+
+    #space
+    st.write('##')
+
     st.markdown('''## What is MethodMIND?''')
     st.markdown('''MethodMIND is an advanced research tool designed to empower scientists, researchers, and healthcare professionals by providing tailored recommendations for experimental methodologies. It bridges the gap between complex scientific queries and actionable insights, helping users identify the best methods for their research needs.''')
+
+    #space
+    st.write('##')
     st.markdown('''## Why is MethodMIND Important?''')
     st.markdown('''In the era of information overload, researchers often face challenges in finding precise, evidence-based answers to their specific scientific questions. MethodMIND solves this problem by leveraging cutting-edge technology to curate and deliver methodologically sound recommendations. This tool aims to accelerate innovation and improve the reproducibility of scientific research across diverse domains, including neuroscience, biomedical research, and more.''')
+
+    #space
+    st.write('##')
     st.markdown('''## How Does MethodMIND Work?''')
     st.markdown('''MethodMIND combines powerful technologies to provide accurate and context-aware recommendations:
         Retrieval-Augmented Generation (RAG): Ensures access to a curated, up-to-date knowledge base, linking user queries with relevant literature and methodologies.
@@ -417,8 +423,14 @@ def about_page():
         Large Language Models (LLMs): Enhance the tool’s ability to provide comprehensive and coherent responses tailored to user queries.
     ''')
 
+    #space
+    st.write('##')
+
     st.markdown('## Our Vision')
     st.markdown('''At MethodMIND, we believe in unlocking the potential of cutting-edge AI to advance science. By streamlining the process of hypothesis testing and methodology selection, we aim to empower the global research community to achieve breakthroughs faster and more efficiently.''')
+
+    #space
+    st.write('##')
 
     st.markdown('''
         ## Credits
@@ -437,7 +449,7 @@ def about_page():
 #                                                      TEAM
 
 def team_page():
-    joking_image_path = "MethodMINDpackage/deployment/images/20241205_110941.jpg"
+    '''joking_image_path = "MethodMINDpackage/deployment/images/20241205_110941.jpg"
     try:
         col1, col2 = st.columns([1, 2])  # Set the first column smaller than the second
         with col2:
@@ -461,8 +473,8 @@ def team_page():
             st.markdown('''''')
             st.markdown('## The Team')
 
-    except Exception:
-        st.markdown('## The Team')
+    except Exception:'''
+    st.markdown('## The Team')
 
     ############################
     ### Elissa
@@ -704,7 +716,7 @@ st.markdown("""
 
 
 # st.sidebar.title("Menu")
-st.sidebar.markdown('<h1 style="color: #D56C00; font-weight: bold; text-align: center;">Menu</h1>', unsafe_allow_html=True)
+st.sidebar.markdown('<h1 style="color: #FFFFFF; font-weight: bold; text-align: center;">Menu</h1>', unsafe_allow_html=True)
 
 if 'menu_open' not in st.session_state:
     st.session_state.menu_open = False
