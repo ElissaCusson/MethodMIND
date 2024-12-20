@@ -744,10 +744,6 @@ image_path_transparent = "MethodMINDpackage/deployment/images/LogoTransparent.pn
 image = Image.open(image_path_transparent)
 st.sidebar.image(image, use_container_width=True)
 
-image_path_qr = "MethodMINDpackage/deployment/images/qr.png"
-image = Image.open(image_path_qr)
-st.sidebar.image(image, use_container_width=True)
-
 if page == "Home":
     home_page()
 elif page == "Disclaimer":
